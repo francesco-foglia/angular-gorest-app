@@ -3,15 +3,14 @@ import { CommonModule } from '@angular/common';
 
 import { PostsComponent } from './posts.component';
 import { PostsRoutingModule } from './posts-routing.module';
-
-import { MatListModule } from '@angular/material/list';
+import { NavbarModule } from '../navbar/navbar.module';
 
 @NgModule({
   declarations: [PostsComponent],
   imports: [
     CommonModule,
     PostsRoutingModule,
-    MatListModule
+    NavbarModule,
   ]
 })
 export class PostsModule { }

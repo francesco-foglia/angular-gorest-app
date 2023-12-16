@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-users',
@@ -9,16 +7,9 @@ import { AuthService } from '../../auth/auth.service';
 })
 export class UsersComponent implements OnInit {
 
-  isLoggedIn: boolean = this.authService.isLoggedIn;
-
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor() { }
 
   ngOnInit(): void {
-  }
-
-  logout(): void {
-    this.authService.isLoggedIn = false;
-    this.router.navigate(['/login']);
   }
 
 }
