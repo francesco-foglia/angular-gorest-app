@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './components/login/login.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
 import { UsersComponent } from './components/users/users.component';
 import { PostsComponent } from './components/posts/posts.component';
 import { UserComponent } from './components/user/user.component';
@@ -19,11 +19,11 @@ import { MatListModule } from '@angular/material/list';
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
-    DashboardComponent,
-    UsersComponent,
-    PostsComponent,
-    UserComponent
+    // LoginComponent,
+    // NavbarComponent,
+    // UsersComponent,
+    // PostsComponent,
+    // UserComponent
   ],
   imports: [
     BrowserModule,

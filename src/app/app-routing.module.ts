@@ -1,24 +1,30 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
 import { AuthGuard } from './auth/auth.guard';
 
-import { LoginComponent } from './components/login/login.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { UsersComponent } from './components/users/users.component';
-import { UserComponent } from './components/user/user.component';
-import { PostsComponent } from './components/posts/posts.component';
-
 const routes: Routes = [
-  { path: 'login', component: LoginComponent },
   {
-    path: '', component: DashboardComponent, canActivate: [AuthGuard], children: [
-      { path: '', redirectTo: 'users', pathMatch: 'full' },
-      { path: 'users', component: UsersComponent, },
-      { path: 'users/:id', component: UserComponent },
-      { path: 'posts', component: PostsComponent },
-    ]
+    path: 'login',
+    loadChildren: () => import('./components/login/login.module').then(m => m.LoginModule)
   },
+  // {
+  //   path: '',
+  //   loadChildren: () => import('./components/navbar/navbar.module').then(m => m.NavbarModule),
+  //   canActivate: [AuthGuard],
+  // },
+  {
+    path: 'users',
+    loadChildren: () => import('./components/users/users.module').then(m => m.UsersModule), canActivate: [AuthGuard]
+  },
+  {
+    path: 'users/:id',
+    loadChildren: () => import('./components/user/user.module').then(m => m.UserModule), canActivate: [AuthGuard]
+  },
+  {
+    path: 'posts',
+    loadChildren: () => import('./components/posts/posts.module').then(m => m.PostsModule), canActivate: [AuthGuard]
+  },
+  { path: '', redirectTo: 'users', pathMatch: 'full' },
   { path: '**', redirectTo: 'users' }
 ];
 
