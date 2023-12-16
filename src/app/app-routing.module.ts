@@ -7,11 +7,6 @@ const routes: Routes = [
     path: 'login',
     loadChildren: () => import('./components/login/login.module').then(m => m.LoginModule)
   },
-  // {
-  //   path: '',
-  //   loadChildren: () => import('./components/navbar/navbar.module').then(m => m.NavbarModule),
-  //   canActivate: [AuthGuard],
-  // },
   {
     path: 'users',
     loadChildren: () => import('./components/users/users.module').then(m => m.UsersModule), canActivate: [AuthGuard]

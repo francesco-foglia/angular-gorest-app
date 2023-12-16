@@ -4,13 +4,14 @@ import { CommonModule } from '@angular/common';
 import { PostsComponent } from './posts.component';
 import { PostsRoutingModule } from './posts-routing.module';
 
-import { NavbarComponent } from '../navbar/navbar.component';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
-  declarations: [PostsComponent, NavbarComponent],
+  declarations: [PostsComponent],
   imports: [
     CommonModule,
-    PostsRoutingModule
+    PostsRoutingModule,
+    MatListModule
   ]
 })
 export class PostsModule { }

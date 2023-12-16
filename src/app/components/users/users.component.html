@@ -1,3 +1,9 @@
-<app-navbar></app-navbar>
+<mat-list role="list">
+  <mat-list-item role="listitem" routerLink="/users" [routerLinkActive]="'active'">Users</mat-list-item>
+  <mat-list-item role="listitem" routerLink="/posts" [routerLinkActive]="'active'">Posts</mat-list-item>
+  <mat-list-item role="listitem">
+    <span class="material-symbols-outlined" (click)="logout()">logout</span>
+  </mat-list-item>
+</mat-list>
 
 <p>users works!</p>
