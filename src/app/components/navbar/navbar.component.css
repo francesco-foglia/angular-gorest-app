@@ -1,0 +1,10 @@
+header {
+  box-shadow: 0 1px 1px rgba(255, 255, 255, 0.15);
+}
+
+.active {
+  text-decoration: underline;
+  text-decoration-color: white;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+}

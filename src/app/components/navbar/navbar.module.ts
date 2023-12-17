@@ -1,18 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NavbarComponent } from './navbar.component';
 
+import { NavbarComponent } from './navbar.component';
 import { NavbarRoutingModule } from './navbar-routing.module';
-import { MatListModule } from '@angular/material/list';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
-  declarations: [
-    NavbarComponent
-  ],
+  declarations: [NavbarComponent],
   imports: [
     CommonModule,
     NavbarRoutingModule,
-    MatListModule
+    MatButtonModule,
   ],
   exports: [NavbarComponent],
 })

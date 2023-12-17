@@ -1,7 +1,12 @@
-<mat-list role="list">
-  <mat-list-item role="listitem" routerLink="/users" routerLinkActive="'active'">Users</mat-list-item>
-  <mat-list-item role="listitem" routerLink="/posts" routerLinkActive="'active'">Posts</mat-list-item>
-  <mat-list-item role="listitem">
-    <span class="material-symbols-outlined" (click)="logout()">logout</span>
-  </mat-list-item>
-</mat-list>
+<header class="w-full absolute top-0 left-0 bg-[#202124]">
+  <nav class="py-5 px-[5%]">
+    <ul class="flex flex-wrap justify-start items-center">
+      <li *ngFor="let route of routes" class="mr-3.5">
+        <a mat-button [routerLink]="[route.path]" routerLinkActive="active">{{ route.title }}</a>
+      </li>
+      <li>
+        <a mat-button routerLink="/login" (click)="logout()">Logout</a>
+      </li>
+    </ul>
+  </nav>
+</header>
