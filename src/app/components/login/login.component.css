@@ -1,0 +1,16 @@
+h1,
+h2,
+p {
+  margin-bottom: 50px;
+}
+
+.token-form {
+  width: 100%;
+  max-width: 550px;
+}
+
+button {
+  display: block;
+  margin: auto;
+  margin-top: 50px;
+}

@@ -1,1 +1,26 @@
-<p>login works!</p>
+<div class="h-screen py-12 px-[5%] flex flex-col">
+  <div class="w-full m-auto mb-0 flex flex-col justify-center items-center">
+    <h1>Angular Gorest App</h1>
+    <h2>Login</h2>
+    <p>
+      Click <a href=" https://gorest.co.in/consumer/login" target="_blank" rel="noopener noreferrer nofollow"
+        class="text-[#c2185b] hover:underline">here</a> to get your access token
+    </p>
+    <!-- <p>
+      message
+    </p> -->
+  </div>
+  <div class="w-full m-auto mt-0 text-center">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <mat-form-field class="token-form">
+        <mat-label>Token</mat-label>
+        <input matInput [type]="hide ? 'password' : 'text'" formControlName="token">
+        <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide token'"
+          [attr.aria-pressed]="hide">
+          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.valid">Login</button>
+    </form>
+  </div>
+</div>
