@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { ApiService } from '../../services/api.service';
 import { HttpResponse } from '@angular/common/http';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-users',
@@ -202,7 +202,7 @@ export class UsersComponent implements OnInit {
           this.userForm.reset();
           this.toggleSpinner();
         } else {
-          this.setMessage('Error creating user', 3000, 'error');
+          this.setMessage('Error adding user', 3000, 'error');
           this.clearInput();
           this.userForm.reset();
           this.toggleSpinner();

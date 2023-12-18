@@ -14,11 +14,11 @@
 
   <div *ngIf="user" class="my-10">
 
-    <p> <span class="text-[#c2185b]">ID:</span> {{user.id}} </p>
-    <p> <span class="text-[#c2185b]">Name:</span> {{user.name}} </p>
-    <p> <span class="text-[#c2185b]">Email:</span> {{user.email}} </p>
-    <p> <span class="text-[#c2185b]">Gender:</span> {{user.gender}} </p>
-    <p> <span class="text-[#c2185b]">Status:</span> {{user.status}} </p>
+    <p> <span class="text-[#c2185b] break-words">ID:</span> {{user.id}} </p>
+    <p> <span class="text-[#c2185b] break-words">Name:</span> {{user.name}} </p>
+    <p> <span class="text-[#c2185b] break-words">Email:</span> {{user.email}} </p>
+    <p> <span class="text-[#c2185b] break-words">Gender:</span> {{user.gender}} </p>
+    <p> <span class="text-[#c2185b] break-words">Status:</span> {{user.status}} </p>
 
     <div *ngIf="posts.length > 0 && showComments" class="mt-10">
       <h2>Posts <span>({{posts.length}})</span></h2>
@@ -35,14 +35,36 @@
           <h4>Comments <span>({{comments.length}})</span></h4>
           <div *ngFor="let comment of comments">
             <p>{{comment.body}}
-              (<small> <span class="text-[#c2185b]">{{ comment.email }}</span> </small>)
+              (<small class="break-words"> <span class="text-[#c2185b]">{{ comment.email }}</span> </small>)
             </p>
           </div>
         </div>
 
         <div class="p-4">
-          <button mat-raised-button (click)="hideForm = !hideForm">Add Comment</button>
-          <span [ngClass]="{'hidden': hideForm, 'block': !hideForm}">form</span>
+          <button mat-raised-button (click)="toggleForm(post.id)">Add Comment</button>
+          <div [ngClass]="{'hidden mt-4': !hideForm[post.id], 'block mt-4': hideForm[post.id]}">
+            <form [formGroup]="commentForm" (ngSubmit)="addComment()">
+              <mat-form-field class="min-w-[250px]">
+                <mat-label>Name</mat-label>
+                <input matInput value="" type="text" formControlName="name">
+              </mat-form-field>
+
+              <mat-form-field class="min-w-[250px]">
+                <mat-label>Email</mat-label>
+                <input matInput value="" type="email" formControlName="email">
+              </mat-form-field>
+
+              <div>
+                <mat-form-field class="w-full min-w-[250px] max-w-[500px]">
+                  <mat-label>Comment</mat-label>
+                  <textarea matInput type="text" formControlName="body"></textarea>
+                </mat-form-field>
+              </div>
+              <button type="submit" mat-raised-button color="primary" [disabled]="!commentForm.valid">
+                <mat-icon>add</mat-icon>
+              </button>
+            </form>
+          </div>
         </div>
 
         <mat-divider></mat-divider>

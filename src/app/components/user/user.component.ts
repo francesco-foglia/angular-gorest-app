@@ -1,5 +1,6 @@
-import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { HttpResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
 
@@ -20,15 +21,29 @@ export class UserComponent implements OnInit {
   posts: any = [];
   comments: any = [];
   showComments: boolean = false;
-  hideForm: boolean = true;
+  hideForm: { [postId: number]: boolean } = {};
+  selectedPostId!: number;
 
-  constructor(private route: ActivatedRoute, private apiService: ApiService) { }
+  commentForm: FormGroup = new FormGroup({});
+  newComment: any = {
+    body: '',
+    name: '',
+    email: '',
+  };
+
+  constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private apiService: ApiService) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
       this.userId = params.get('id') || '';
       this.getUser();
       this.getUserPosts();
+    });
+
+    this.commentForm = new FormGroup({
+      body: new FormControl('', Validators.required),
+      name: new FormControl('', Validators.required),
+      email: new FormControl('', [Validators.required, Validators.email]),
     });
   }
 
@@ -72,6 +87,7 @@ export class UserComponent implements OnInit {
 
   getPostComments(postId: number) {
     this.toggleSpinner();
+    this.selectedPostId = postId;
 
     this.apiService.get(`posts/${postId}/comments`).subscribe({
       next: (data) => {
@@ -104,6 +120,32 @@ export class UserComponent implements OnInit {
   toggleSpinner() {
     this.spinner = !this.spinner;
     this.body.classList.toggle('overflow-html');
+  }
+
+  toggleForm(postId: number) {
+    this.hideForm[postId] = !this.hideForm[postId];
+  }
+
+  addComment() {
+    const postId = this.selectedPostId;
+
+    if (postId !== null) {
+      this.apiService.post(`posts/${postId}/comments`, this.commentForm.value).subscribe({
+        next: (data: any) => {
+          this.getPostComments(postId);
+          this.setMessage('Comment created successfully', 3000, 'confirm');
+          this.commentForm.reset();
+          this.toggleForm(postId);
+        },
+        error: (error) => {
+          this.toggleSpinner();
+          this.setMessage('Error adding comment', 3000, 'error');
+          this.commentForm.reset();
+          this.toggleForm(postId);
+          this.toggleSpinner();
+        }
+      });
+    }
   }
 
 }
