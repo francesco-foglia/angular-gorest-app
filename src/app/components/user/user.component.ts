@@ -12,10 +12,15 @@ export class UserComponent implements OnInit {
 
   confirmMessage: string = '';
   errorMessage: string = '';
+  noPostsMessage: string = '';
   spinner: boolean = false;
   body: any = document.getElementsByTagName('body')[0];
   userId: string = '';
   user: any = {};
+  posts: any = [];
+  comments: any = [];
+  showComments: boolean = false;
+  hideForm: boolean = true;
 
   constructor(private route: ActivatedRoute, private apiService: ApiService) { }
 
@@ -23,6 +28,7 @@ export class UserComponent implements OnInit {
     this.route.paramMap.subscribe((params) => {
       this.userId = params.get('id') || '';
       this.getUser();
+      this.getUserPosts();
     });
   }
 
@@ -32,11 +38,50 @@ export class UserComponent implements OnInit {
     this.apiService.get(`users/${this.userId}`).subscribe({
       next: (response: HttpResponse<any>) => {
         this.user = response.body;
-        console.log(this.user);
+        console.log('user', this.user);
         this.toggleSpinner();
       },
       error: (error) => {
         this.setMessage('Error getting user', 3000, 'error');
+        this.toggleSpinner();
+      }
+    });
+  }
+
+  getUserPosts() {
+    this.toggleSpinner();
+
+    this.apiService.get(`users/${this.userId}/posts`).subscribe({
+      next: (data) => {
+        console.log('posts', data.body);
+        this.posts = data.body;
+        this.posts.map((post: any) => {
+          this.getPostComments(post.id);
+        })
+        this.toggleSpinner();
+        if (!this.posts.length) {
+          this.noPostsMessage = 'There are no posts associated with this user';
+        }
+      },
+      error: (error) => {
+        this.setMessage('Error getting posts', 3000, 'error');
+        this.toggleSpinner();
+      }
+    });
+  }
+
+  getPostComments(postId: number) {
+    this.toggleSpinner();
+
+    this.apiService.get(`posts/${postId}/comments`).subscribe({
+      next: (data) => {
+        console.log('comments', data.body);
+        this.comments = data.body;
+        this.showComments = true;
+        this.toggleSpinner();
+      },
+      error: (error) => {
+        this.setMessage('Error getting comments', 3000, 'error');
         this.toggleSpinner();
       }
     });

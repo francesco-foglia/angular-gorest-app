@@ -13,11 +13,47 @@
   </div>
 
   <div *ngIf="user" class="my-10">
+
     <p> <span class="text-[#c2185b]">ID:</span> {{user.id}} </p>
     <p> <span class="text-[#c2185b]">Name:</span> {{user.name}} </p>
     <p> <span class="text-[#c2185b]">Email:</span> {{user.email}} </p>
     <p> <span class="text-[#c2185b]">Gender:</span> {{user.gender}} </p>
     <p> <span class="text-[#c2185b]">Status:</span> {{user.status}} </p>
+
+    <div *ngIf="posts.length > 0 && showComments" class="mt-10">
+      <h2>Posts <span>({{posts.length}})</span></h2>
+
+      <div class="my-5" *ngFor="let post of posts">
+        <mat-card>
+          <mat-card-content>
+            <h3>{{post.title}}</h3>
+            <p>{{post.body}}</p>
+          </mat-card-content>
+        </mat-card>
+
+        <div *ngIf="comments.length > 0" class="p-4">
+          <h4>Comments <span>({{comments.length}})</span></h4>
+          <div *ngFor="let comment of comments">
+            <p>{{comment.body}}
+              (<small> <span class="text-[#c2185b]">{{ comment.email }}</span> </small>)
+            </p>
+          </div>
+        </div>
+
+        <div class="p-4">
+          <button mat-raised-button (click)="hideForm = !hideForm">Add Comment</button>
+          <span [ngClass]="{'hidden': hideForm, 'block': !hideForm}">form</span>
+        </div>
+
+        <mat-divider></mat-divider>
+      </div>
+
+    </div>
+
+    <div *ngIf="!spinner && !posts.length && noPostsMessage" class="mt-10">
+      <p>{{noPostsMessage}}</p>
+    </div>
+
   </div>
 
   <div *ngIf="spinner" class="spinner-container w-full h-screen top-0 left-0 z-[1] flex justify-center items-center">

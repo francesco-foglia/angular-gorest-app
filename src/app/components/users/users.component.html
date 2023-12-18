@@ -52,8 +52,8 @@
   </div>
 
   <ng-container *ngIf="loadingAllUsers; else searchbar">
-    <div class="my-10">
-      Loading all users for search...
+    <div class="my-10 text-[#c2185b]">
+      Wait for all users to load...
     </div>
   </ng-container>
 
@@ -101,7 +101,8 @@
           </div>
         </div>
         <div class="whitespace-break-spaces">
-          <a [routerLink]="['/users', user.id]" class="flex flex-wrap hover:underline underline-offset-2">
+          <a [routerLink]="['/users', user.id]" class="flex flex-wrap hover:underline underline-offset-2"
+            [ngClass]="{'pointer-events-none': loadingAllUsers, 'pointer-events-auto': !loadingAllUsers}">
             <p class="flex">
               <span class="text-[#c2185b]">Name: </span>
               <span class="break-all">{{ user.name }} &nbsp; &nbsp;</span>
