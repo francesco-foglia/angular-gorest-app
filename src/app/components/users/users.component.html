@@ -1,5 +1,18 @@
 <app-navbar></app-navbar>
 
 <div class="w-full h-[calc(100vh-60px)] mt-[60px] py-12 px-[5%]">
+
   <h1>Users</h1>
+
+  <div *ngIf="confirmMessage" class="w-full md:w-1/2 my-10">
+    <mat-card>
+      <mat-card-content class="text-green-500">{{confirmMessage}}</mat-card-content>
+    </mat-card>
+  </div>
+  <div *ngIf="errorMessage" class="w-full md:w-1/2 my-10">
+    <mat-card>
+      <mat-card-content class="text-red-500">{{errorMessage}}</mat-card-content>
+    </mat-card>
+  </div>
+
 </div>

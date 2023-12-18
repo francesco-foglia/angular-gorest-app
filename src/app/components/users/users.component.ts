@@ -7,6 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UsersComponent implements OnInit {
 
+  confirmMessage: string = '';
+  errorMessage: string = '';
+
   constructor() { }
 
   ngOnInit(): void {
