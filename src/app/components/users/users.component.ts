@@ -13,6 +13,8 @@ export class UsersComponent implements OnInit {
   spinner: boolean = false;
   body: any = document.getElementsByTagName('body')[0];
   users: any[] = [];
+  currentPage: number = 1;
+  resultsPerPage: number = 100;
 
   constructor(private apiService: ApiService) { }
 
@@ -23,7 +25,7 @@ export class UsersComponent implements OnInit {
   getUsers() {
     this.toggleSpinner();
 
-    this.apiService.get(`users`).subscribe({
+    this.apiService.get(`users?page=${this.currentPage}&per_page=${this.resultsPerPage}`).subscribe({
       next: (data: any) => {
         this.users = data;
         this.toggleSpinner();
@@ -68,6 +70,20 @@ export class UsersComponent implements OnInit {
       setTimeout(() => {
         this.errorMessage = '';
       }, duration);
+    }
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.getUsers();
+    }
+  }
+
+  nextPage() {
+    if (this.users.length === this.resultsPerPage) {
+      this.currentPage++;
+      this.getUsers();
     }
   }
 

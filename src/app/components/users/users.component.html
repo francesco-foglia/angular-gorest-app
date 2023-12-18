@@ -12,6 +12,17 @@
     </mat-card>
   </div>
 
+  <div class="my-10">
+    <button (click)="previousPage()" mat-raised-button color="primary" [disabled]="currentPage === 1">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <span class="mr-4"></span>
+    <button (click)="nextPage()" mat-raised-button color="primary"
+      [disabled]="this.users.length !== this.resultsPerPage ">
+      <mat-icon>arrow_forward</mat-icon>
+    </button>
+  </div>
+
   <div *ngIf="users.length > 0" class="my-10">
     <ul>
       <li *ngFor="let user of users" class="mb-6 flex justify-start items-center">
