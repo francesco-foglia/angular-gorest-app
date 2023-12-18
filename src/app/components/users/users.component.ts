@@ -41,7 +41,7 @@ export class UsersComponent implements OnInit {
       this.apiService.delete(`users/${userId}`).subscribe({
         next: (data: any) => {
           this.getUsers();
-          this.setMessage('User deleted successfully', 3000, 'error');
+          this.setMessage('User deleted successfully', 3000, 'confirm');
         },
         error: (error) => {
           this.toggleSpinner();
