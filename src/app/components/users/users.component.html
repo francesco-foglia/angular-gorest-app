@@ -17,12 +17,12 @@
 
   <div *ngIf="users.length > 0" class="my-10">
     <ul>
-      <li *ngFor="let user of users" class="mb-4 flex justify-start item-start sm:items-center">
+      <li *ngFor="let user of users" class="mb-6 flex justify-start items-center">
         <div class="flex">
-          <div class="m-auto mt-[2.5px] mr-4">
-            <!-- <button (click)="deleteUser(user.id)" mat-raised-button>
+          <div class="m-auto mr-4 mb-[12px]">
+            <button mat-raised-button (click)="deleteUser(user.id)">
               <mat-icon>delete</mat-icon>
-            </button> -->
+            </button>
           </div>
         </div>
         <div class="whitespace-break-spaces">

@@ -22,12 +22,10 @@ export class UsersComponent implements OnInit {
 
   getUsers() {
     this.toggleSpinner();
-    const token = sessionStorage.getItem('token');
 
-    this.apiService.get(`users?access-token=${token}`).subscribe({
+    this.apiService.get(`users`).subscribe({
       next: (data: any) => {
         this.users = data;
-        this.setMessage('Users retrieved successfully', 3000, 'confirm');
         this.toggleSpinner();
       },
       error: (error) => {
@@ -35,6 +33,23 @@ export class UsersComponent implements OnInit {
         this.toggleSpinner();
       }
     });
+  }
+
+  deleteUser(userId: number) {
+    if (confirm('Are you sure you want to delete this user?')) {
+
+      this.apiService.delete(`users/${userId}`).subscribe({
+        next: (data: any) => {
+          this.getUsers();
+          this.setMessage('User deleted successfully', 3000, 'error');
+        },
+        error: (error) => {
+          this.toggleSpinner();
+          this.setMessage('Error deleting user', 3000, 'error');
+          this.toggleSpinner();
+        }
+      });
+    }
   }
 
   toggleSpinner() {
