@@ -15,4 +15,30 @@
     </mat-card>
   </div>
 
+  <div *ngIf="users.length > 0" class="my-10">
+    <ul>
+      <li *ngFor="let user of users" class="mb-4 flex justify-start item-start sm:items-center">
+        <div class="flex">
+          <div class="m-auto mt-[2.5px] mr-4">
+            <!-- <button (click)="deleteUser(user.id)" mat-raised-button>
+              <mat-icon>delete</mat-icon>
+            </button> -->
+          </div>
+        </div>
+        <div class="whitespace-break-spaces">
+          <a [routerLink]="['/users', user.id]" class="flex flex-wrap hover:underline underline-offset-2">
+            <p class="flex">
+              <span class="text-[#c2185b]">Name: </span>
+              <span class="break-all">{{ user.name }} &nbsp; &nbsp;</span>
+            </p>
+            <p class="flex">
+              <span class="text-[#c2185b]">Email: </span>
+              <span class="break-all">{{ user.email }}</span>
+            </p>
+          </a>
+        </div>
+      </li>
+    </ul>
+  </div>
+
 </div>
