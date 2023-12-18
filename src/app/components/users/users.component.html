@@ -4,7 +4,7 @@
 
   <h1>Users</h1>
 
-  <div *ngIf="confirmMessage || errorMessage" class="w-full md:w-1/2 my-10">
+  <div *ngIf="confirmMessage || errorMessage" class="w-full lg:w-1/2 my-10">
     <mat-card>
       <mat-card-content [ngClass]="{'text-green-500': confirmMessage, 'text-red-500': errorMessage}">
         {{confirmMessage ? confirmMessage : errorMessage}}
@@ -45,11 +45,25 @@
       </mat-form-field>
 
       <span class="mr-4"></span>
-      <button type="submit" mat-raised-button color="primary" [disabled]="!userForm.valid">
+      <button type="submit" mat-raised-button color="primary" [disabled]="!userForm.valid || loadingPagination">
         <mat-icon>add</mat-icon>
       </button>
     </form>
   </div>
+
+  <ng-container *ngIf="loadingPagination; else paginationContent">
+    <div class="my-10">
+      Loading pagination...
+    </div>
+  </ng-container>
+
+  <ng-template #paginationContent>
+    <div class="my-10">
+      <p><span class="text-[#c2185b]">Page:</span> {{currentPage}} of {{pages}}</p>
+      <div class="mb-2"></div>
+      <p><span class="text-[#c2185b]">Results:</span> {{paginationResults()}}</p>
+    </div>
+  </ng-template>
 
   <div class="my-10">
     <button (click)="previousPage()" mat-raised-button color="primary" [disabled]="currentPage === 1">
@@ -67,7 +81,7 @@
       <li *ngFor="let user of users" class="mb-6 flex justify-start items-center">
         <div class="flex">
           <div class="m-auto mr-4 mb-[12px]">
-            <button mat-raised-button (click)="deleteUser(user.id)">
+            <button mat-raised-button (click)="deleteUser(user.id)" [disabled]="loadingPagination">
               <mat-icon>delete</mat-icon>
             </button>
           </div>

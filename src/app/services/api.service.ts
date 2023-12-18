@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -17,9 +17,9 @@ export class ApiService {
     });
   }
 
-  get<T>(endpoint: string): Observable<T> {
+  get<T>(endpoint: string): Observable<HttpResponse<T>> {
     const url = `${this.apiUrl}/${endpoint}`;
-    return this.http.get<T>(url, { headers: this.getHeaders() });
+    return this.http.get<T>(url, { headers: this.getHeaders(), observe: 'response' });
   }
 
   post<T>(endpoint: string, data: any): Observable<T> {

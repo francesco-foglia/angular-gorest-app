@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-users',
@@ -25,10 +26,22 @@ export class UsersComponent implements OnInit {
     status: '',
   };
 
+  allUsersArray: any[] = [];
+  allUsersLength: number = 0;
+  allPages: number = 0;
+  loadingPagination: boolean = false;
+
+  // Pagination
+  total: number = 0;
+  pages: number = 0;
+  page: number = 0;
+  limit: number = 0;
+
   constructor(private formBuilder: FormBuilder, private apiService: ApiService) { }
 
   ngOnInit(): void {
     this.getUsers();
+    this.getAllUsers();
 
     this.userForm = new FormGroup({
       name: new FormControl('', Validators.required),
@@ -42,12 +55,29 @@ export class UsersComponent implements OnInit {
     this.toggleSpinner();
 
     this.apiService.get(`users?page=${this.currentPage}&per_page=${this.resultsPerPage}`).subscribe({
-      next: (data: any) => {
-        this.users = data;
+      next: (response: HttpResponse<any>) => {
+
+        console.log('Response:', response);
+
+        const headers = response.headers;
+        console.log('Headers:', headers);
+
+        this.total = +headers.get('X-Pagination-Total')!;
+        console.log('Total:', this.total);
+        this.pages = +headers.get('X-Pagination-Pages')!;
+        console.log('Pages:', this.pages);
+        this.page = +headers.get('X-Pagination-Page')!;
+        console.log('Page:', this.page);
+        this.limit = +headers.get('X-Pagination-Limit')!;
+        console.log('Limit:', this.limit);
+
+        this.pages = Math.ceil(this.total / this.resultsPerPage);
+
+        this.users = response.body;
         this.toggleSpinner();
       },
       error: (error) => {
-        this.setMessage('Error retrieving users', 3000, 'error');
+        this.setMessage('Error getting users', 3000, 'error');
         this.toggleSpinner();
       }
     });
@@ -60,6 +90,7 @@ export class UsersComponent implements OnInit {
         next: (data: any) => {
           this.getUsers();
           this.setMessage('User deleted successfully', 3000, 'confirm');
+          this.getAllUsers();
         },
         error: (error) => {
           this.toggleSpinner();
@@ -108,19 +139,63 @@ export class UsersComponent implements OnInit {
       next: (data: any) => {
         this.getUsers();
         this.setMessage('User created successfully', 3000, 'confirm');
+        this.userForm.reset();
+        this.getAllUsers();
       },
       error: (error) => {
+        this.toggleSpinner();
         if (error.error[0].message === "has already been taken") {
-          this.toggleSpinner();
           this.setMessage(`User Email ${error.error[0].message}`, 3000, 'error');
+          this.userForm.reset();
           this.toggleSpinner();
         } else {
-          this.toggleSpinner();
           this.setMessage('Error creating user', 3000, 'error');
+          this.userForm.reset();
           this.toggleSpinner();
         }
       }
     });
+  }
+
+  getAllUsers() {
+    // this.getAllUsersRecursive(1, []);
+  }
+
+  getAllUsersRecursive(page: number, allUsers: any[]) {
+    this.loadingPagination = true;
+    const url = `users?page=${page}&per_page=${this.resultsPerPage}`;
+
+    this.apiService.get(url).subscribe({
+      next: (data: any) => {
+        if (data.length > 0) {
+          allUsers = allUsers.concat(data);
+          setTimeout(() => {
+            this.getAllUsersRecursive(page + 1, allUsers);
+          }, 100);
+        } else {
+          this.allUsersArray = allUsers;
+          this.allUsersLength = allUsers.length;
+          this.allPages = page - 1;
+          this.loadingPagination = false;
+        }
+      },
+      error: (error) => {
+        if (error.status === 429) {
+          this.setMessage('Error getting all users. Please log out and try again later', 5000, 'error');
+        } else {
+          this.setMessage('Error getting all users', 3000, 'error');
+        }
+      }
+    });
+  }
+
+
+  paginationResults() {
+    const results = `
+      ${this.currentPage === 1 ? 1 : (this.currentPage - 1) * this.resultsPerPage + 1} -
+      ${this.users.length === this.resultsPerPage ? this.currentPage * this.resultsPerPage : this.total} of ${this.total}
+    `;
+    return results;
   }
 
 }
