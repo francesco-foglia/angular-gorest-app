@@ -7,7 +7,7 @@
       Click <a href=" https://gorest.co.in/consumer/login" target="_blank" rel="noopener noreferrer nofollow"
         class="text-[#c2185b] hover:underline">here</a> to get your access token
     </p>
-    <p *ngIf="errorMessage" class="text-[#f44336]">
+    <p *ngIf="errorMessage && loginForm.value.token.trim()!== ''" class="text-[#f44336]">
       {{ errorMessage }}
     </p>
   </div>
@@ -16,10 +16,10 @@
     <form [formGroup]="loginForm">
       <mat-form-field class=" token-form">
         <mat-label>Token</mat-label>
-        <input matInput [type]="hide ? 'password' : 'text'" formControlName="token" (click)="onInput()">
-        <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide token'"
-          [attr.aria-pressed]="hide">
-          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        <input matInput [type]="hide ? 'password' : 'text'" formControlName="token" (click)="onInput()"
+          (keyup)="onKeyUp($event)">
+        <button mat-icon-button matSuffix [attr.aria-label]="'Hide token'" [attr.aria-pressed]="hide">
+          <mat-icon (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
       </mat-form-field>
       <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.valid"

@@ -67,4 +67,10 @@ export class LoginComponent implements OnInit {
     this.errorMessage = '';
   }
 
+  onKeyUp(event: KeyboardEvent): void {
+    if (event.key === 'Enter') {
+      this.onSubmit();
+    }
+  }
+
 }
