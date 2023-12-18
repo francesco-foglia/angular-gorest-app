@@ -6,6 +6,7 @@ import { UsersRoutingModule } from './users-routing.module';
 import { NavbarModule } from '../navbar/navbar.module';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [UsersComponent],
@@ -14,7 +15,8 @@ import { MatIconModule } from '@angular/material/icon';
     UsersRoutingModule,
     NavbarModule,
     MatCardModule,
-    MatIconModule
+    MatIconModule,
+    MatProgressSpinnerModule
   ]
 })
 export class UsersModule { }

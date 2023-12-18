@@ -15,3 +15,11 @@ body {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.spinner-container {
+  position: fixed;
+}
+
+.overflow-html {
+  overflow-y: hidden;
+}
