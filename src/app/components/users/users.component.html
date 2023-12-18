@@ -13,6 +13,45 @@
   </div>
 
   <div class="my-10">
+    <small>Add New User</small>
+    <form [formGroup]="userForm" (ngSubmit)="addUser()">
+
+      <mat-form-field class="user-form">
+        <mat-label>Name</mat-label>
+        <input matInput value="" type="text" formControlName="name">
+      </mat-form-field>
+
+      <mat-form-field class="user-form">
+        <mat-label>Email</mat-label>
+        <input matInput value="" type="email" formControlName="email">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Gender</mat-label>
+        <mat-select formControlName="gender">
+          <mat-option></mat-option>
+          <mat-option value="male">Male</mat-option>
+          <mat-option value="female">Female</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option></mat-option>
+          <mat-option value="active">Active</mat-option>
+          <mat-option value="inactive">Inactive</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <span class="mr-4"></span>
+      <button type="submit" mat-raised-button color="primary" [disabled]="!userForm.valid">
+        <mat-icon>add</mat-icon>
+      </button>
+    </form>
+  </div>
+
+  <div class="my-10">
     <button (click)="previousPage()" mat-raised-button color="primary" [disabled]="currentPage === 1">
       <mat-icon>arrow_back</mat-icon>
     </button>

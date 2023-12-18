@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 
 @Component({
@@ -16,10 +17,25 @@ export class UsersComponent implements OnInit {
   currentPage: number = 1;
   resultsPerPage: number = 100;
 
-  constructor(private apiService: ApiService) { }
+  userForm: FormGroup = new FormGroup({});
+  newUser: any = {
+    name: '',
+    email: '',
+    gender: '',
+    status: '',
+  };
+
+  constructor(private formBuilder: FormBuilder, private apiService: ApiService) { }
 
   ngOnInit(): void {
     this.getUsers();
+
+    this.userForm = new FormGroup({
+      name: new FormControl('', Validators.required),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      gender: new FormControl('', Validators.required),
+      status: new FormControl('', Validators.required),
+    });
   }
 
   getUsers() {
@@ -85,6 +101,26 @@ export class UsersComponent implements OnInit {
       this.currentPage++;
       this.getUsers();
     }
+  }
+
+  addUser() {
+    this.apiService.post('users', this.userForm.value).subscribe({
+      next: (data: any) => {
+        this.getUsers();
+        this.setMessage('User created successfully', 3000, 'confirm');
+      },
+      error: (error) => {
+        if (error.error[0].message === "has already been taken") {
+          this.toggleSpinner();
+          this.setMessage(`User Email ${error.error[0].message}`, 3000, 'error');
+          this.toggleSpinner();
+        } else {
+          this.toggleSpinner();
+          this.setMessage('Error creating user', 3000, 'error');
+          this.toggleSpinner();
+        }
+      }
+    });
   }
 
 }

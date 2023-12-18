@@ -11,7 +11,7 @@ import { ApiService } from '../../services/api.service';
 })
 export class LoginComponent implements OnInit {
 
-  loginForm!: FormGroup;
+  loginForm: FormGroup = new FormGroup({});
   value: string = '';
   hide: boolean = true;
   spinner: boolean = false;
