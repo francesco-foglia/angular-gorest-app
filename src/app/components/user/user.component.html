@@ -1,5 +1,27 @@
 <app-navbar></app-navbar>
 
 <div class="w-full min-h-[calc(100vh-60px)] mt-[60px] pt-12 pb-6 px-[5%] relative">
+
   <h1>User</h1>
+
+  <div *ngIf="confirmMessage || errorMessage" class="w-full lg:w-1/2 my-10">
+    <mat-card>
+      <mat-card-content [ngClass]="{'text-green-500': confirmMessage, 'text-red-500': errorMessage}">
+        {{confirmMessage ? confirmMessage : errorMessage}}
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div *ngIf="user" class="my-10">
+    <p> <span class="text-[#c2185b]">ID:</span> {{user.id}} </p>
+    <p> <span class="text-[#c2185b]">Name:</span> {{user.name}} </p>
+    <p> <span class="text-[#c2185b]">Email:</span> {{user.email}} </p>
+    <p> <span class="text-[#c2185b]">Gender:</span> {{user.gender}} </p>
+    <p> <span class="text-[#c2185b]">Status:</span> {{user.status}} </p>
+  </div>
+
+  <div *ngIf="spinner" class="spinner-container w-full h-screen top-0 left-0 z-[1] flex justify-center items-center">
+    <mat-spinner></mat-spinner>
+  </div>
+
 </div>

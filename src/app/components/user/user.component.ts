@@ -10,8 +10,12 @@ import { ApiService } from 'src/app/services/api.service';
 })
 export class UserComponent implements OnInit {
 
+  confirmMessage: string = '';
+  errorMessage: string = '';
+  spinner: boolean = false;
+  body: any = document.getElementsByTagName('body')[0];
   userId: string = '';
-  user: any;
+  user: any = {};
 
   constructor(private route: ActivatedRoute, private apiService: ApiService) { }
 
@@ -23,14 +27,38 @@ export class UserComponent implements OnInit {
   }
 
   getUser() {
+    this.toggleSpinner();
+
     this.apiService.get(`users/${this.userId}`).subscribe({
       next: (response: HttpResponse<any>) => {
-        console.log(response.body);
+        this.user = response.body;
+        console.log(this.user);
+        this.toggleSpinner();
       },
       error: (error) => {
-        console.error(error);
+        this.setMessage('Error getting user', 3000, 'error');
+        this.toggleSpinner();
       }
     });
+  }
+
+  setMessage(message: string, duration: number, messageType: 'confirm' | 'error') {
+    if (messageType === 'confirm') {
+      this.confirmMessage = message;
+      setTimeout(() => {
+        this.confirmMessage = '';
+      }, duration);
+    } else if (messageType === 'error') {
+      this.errorMessage = message;
+      setTimeout(() => {
+        this.errorMessage = '';
+      }, duration);
+    }
+  }
+
+  toggleSpinner() {
+    this.spinner = !this.spinner;
+    this.body.classList.toggle('overflow-html');
   }
 
 }
