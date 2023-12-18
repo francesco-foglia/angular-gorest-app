@@ -16,12 +16,12 @@
     <small>Add New User</small>
     <form [formGroup]="userForm" (ngSubmit)="addUser()">
 
-      <mat-form-field class="user-form">
+      <mat-form-field class="min-w-[250px]">
         <mat-label>Name</mat-label>
         <input matInput value="" type="text" formControlName="name">
       </mat-form-field>
 
-      <mat-form-field class="user-form">
+      <mat-form-field class="min-w-[250px]">
         <mat-label>Email</mat-label>
         <input matInput value="" type="email" formControlName="email">
       </mat-form-field>
@@ -59,7 +59,7 @@
 
   <ng-template #searchbar>
     <div *ngIf="!loadingAllUsers" class="my-10">
-      <mat-form-field class="search-form">
+      <mat-form-field class="w-full min-w-[250px] max-w-[500px]">
         <mat-label>Search for the user by name or email</mat-label>
         <input matInput (input)="searchUsers()" [(ngModel)]="searchTerm">
         <button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchTerm" (click)="clearInput()">
