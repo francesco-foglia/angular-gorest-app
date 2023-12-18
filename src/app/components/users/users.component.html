@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
 
-<div class="w-full min-h-[calc(100vh-60px)] mt-[60px] py-12 px-[5%] relative">
+<div class="w-full min-h-[calc(100vh-60px)] mt-[60px] pt-12 pb-6 px-[5%] relative">
 
   <h1>Users</h1>
 
@@ -45,19 +45,41 @@
       </mat-form-field>
 
       <span class="mr-4"></span>
-      <button type="submit" mat-raised-button color="primary" [disabled]="!userForm.valid">
+      <button type="submit" mat-raised-button color="primary" [disabled]="!userForm.valid || loadingAllUsers">
         <mat-icon>add</mat-icon>
       </button>
     </form>
   </div>
 
-  <div *ngIf="users.length > 0" class="my-10">
+  <ng-container *ngIf="loadingAllUsers; else searchbar">
+    <div class="my-10">
+      Loading all users for search...
+    </div>
+  </ng-container>
+
+  <ng-template #searchbar>
+    <div *ngIf="!loadingAllUsers" class="my-10">
+      <mat-form-field class="search-form">
+        <mat-label>Search for the user by name or email</mat-label>
+        <input matInput (input)="searchUsers()" [(ngModel)]="searchTerm">
+        <button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchTerm" (click)="clearInput()">
+          <small>&#x2715;</small>
+        </button>
+      </mat-form-field>
+    </div>
+  </ng-template>
+
+  <div *ngIf="searchTerm !== ''" class="my-10">
+    {{searchedUsersLength}} results
+  </div>
+
+  <div *ngIf="users.length > 0 && searchTerm === ''" class="my-10">
     <p><span class="text-[#c2185b]">Page:</span> {{currentPage}} of {{pages}}</p>
     <div class="mb-2"></div>
     <p><span class="text-[#c2185b]">Results:</span> {{paginationResults()}}</p>
   </div>
 
-  <div class="my-10">
+  <div *ngIf="users.length > 0 && searchTerm === ''" class="my-10">
     <button (click)="previousPage()" mat-raised-button color="primary" [disabled]="currentPage === 1">
       <mat-icon>arrow_back</mat-icon>
     </button>
@@ -68,12 +90,12 @@
     </button>
   </div>
 
-  <div *ngIf="users.length > 0" class="my-10">
+  <div *ngIf="users.length > 0" class="mt-10">
     <ul>
       <li *ngFor="let user of users" class="mb-6 flex justify-start items-center">
         <div class="flex">
           <div class="m-auto mr-4 mb-[12px]">
-            <button mat-raised-button (click)="deleteUser(user.id)">
+            <button mat-raised-button (click)="deleteUser(user.id)" [disabled]="loadingAllUsers">
               <mat-icon>delete</mat-icon>
             </button>
           </div>

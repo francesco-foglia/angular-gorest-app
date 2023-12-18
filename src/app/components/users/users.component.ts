@@ -32,10 +32,18 @@ export class UsersComponent implements OnInit {
   page: number = 0;
   limit: number = 0;
 
+  loadingAllUsers: boolean = false;
+  allUsersArray: any[] = [];
+
+  searchedUsers: any[] = [];
+  searchedUsersLength: number = 0;
+  searchTerm: string = '';
+
   constructor(private formBuilder: FormBuilder, private apiService: ApiService) { }
 
   ngOnInit(): void {
     this.getUsers();
+    this.getAllUsers();
 
     this.userForm = new FormGroup({
       name: new FormControl('', Validators.required),
@@ -51,23 +59,17 @@ export class UsersComponent implements OnInit {
     this.apiService.get(`users?page=${this.currentPage}&per_page=${this.resultsPerPage}`).subscribe({
       next: (response: HttpResponse<any>) => {
 
-        console.log('Response:', response);
-
         const headers = response.headers;
-        console.log('Headers:', headers);
 
         this.total = +headers.get('X-Pagination-Total')!;
-        console.log('Total:', this.total);
         this.pages = +headers.get('X-Pagination-Pages')!;
-        console.log('Pages:', this.pages);
         this.page = +headers.get('X-Pagination-Page')!;
-        console.log('Page:', this.page);
         this.limit = +headers.get('X-Pagination-Limit')!;
-        console.log('Limit:', this.limit);
 
         this.pages = Math.ceil(this.total / this.resultsPerPage);
 
         this.users = response.body;
+
         this.toggleSpinner();
       },
       error: (error) => {
@@ -77,6 +79,59 @@ export class UsersComponent implements OnInit {
     });
   }
 
+  getAllUsers() {
+    this.getAllUsersRecursive(1, []);
+  }
+
+  getAllUsersRecursive(page: number, allUsers: any[]) {
+    this.loadingAllUsers = true;
+    const url = `users?page=${page}&per_page=100`;
+
+    this.apiService.get(url).subscribe({
+      next: (response: HttpResponse<any>) => {
+        if (response.body.length > 0) {
+          allUsers = allUsers.concat(response.body);
+          setTimeout(() => {
+            this.getAllUsersRecursive(page + 1, allUsers);
+          }, 100);
+        } else {
+          this.allUsersArray = allUsers;
+          this.loadingAllUsers = false;
+        }
+      },
+      error: (error) => {
+        if (error.status === 429) {
+          this.setMessage('Error getting all users. Please log out and try again later', 5000, 'error');
+        } else {
+          this.setMessage('Error getting all users', 3000, 'error');
+        }
+      }
+    });
+  }
+
+  searchUsers() {
+    if (this.searchTerm.trim() !== '') {
+      this.toggleSpinner();
+      this.searchedUsers = this.allUsersArray.filter(user =>
+        user.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+      this.users = this.searchedUsers;
+      this.searchedUsersLength = this.searchedUsers.length;
+      this.toggleSpinner();
+    } else {
+      this.getUsers();
+    }
+  }
+
+  clearInput() {
+    if (this.searchTerm !== '') {
+      this.searchTerm = '';
+      this.searchedUsersLength = 0;
+      this.getUsers();
+    }
+  }
+
   deleteUser(userId: number) {
     if (confirm('Are you sure you want to delete this user?')) {
 
@@ -84,10 +139,13 @@ export class UsersComponent implements OnInit {
         next: (data: any) => {
           this.getUsers();
           this.setMessage('User deleted successfully', 3000, 'confirm');
+          this.clearInput();
+          this.getAllUsers();
         },
         error: (error) => {
           this.toggleSpinner();
           this.setMessage('Error deleting user', 3000, 'error');
+          this.clearInput();
           this.toggleSpinner();
         }
       });
@@ -132,16 +190,20 @@ export class UsersComponent implements OnInit {
       next: (data: any) => {
         this.getUsers();
         this.setMessage('User created successfully', 3000, 'confirm');
+        this.clearInput();
         this.userForm.reset();
+        this.getAllUsers();
       },
       error: (error) => {
         this.toggleSpinner();
         if (error.error[0].message === "has already been taken") {
           this.setMessage(`User Email ${error.error[0].message}`, 3000, 'error');
+          this.clearInput();
           this.userForm.reset();
           this.toggleSpinner();
         } else {
           this.setMessage('Error creating user', 3000, 'error');
+          this.clearInput();
           this.userForm.reset();
           this.toggleSpinner();
         }
