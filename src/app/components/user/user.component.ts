@@ -15,13 +15,12 @@ export class UserComponent implements OnInit {
   errorMessage: string = '';
   noPostsMessage: string = '';
   spinner: boolean = false;
-  body: any = document.getElementsByTagName('body')[0];
   userId: string = '';
   user: any = {};
   posts: any = [];
   comments: any = [];
-  showComments: boolean = false;
   hideForm: { [postId: number]: boolean } = {};
+  hideComments: { [postId: number]: boolean } = {};
   selectedPostId!: number;
 
   commentForm: FormGroup = new FormGroup({});
@@ -70,9 +69,19 @@ export class UserComponent implements OnInit {
       next: (data) => {
         console.log('posts', data.body);
         this.posts = data.body;
-        this.posts.map((post: any) => {
-          this.getPostComments(post.id);
-        })
+
+        this.posts.forEach((post: any) => {
+          this.apiService.get(`posts/${post.id}/comments`).subscribe({
+            next: (commentsData) => {
+              console.log('comments', commentsData.body);
+              post.comments = commentsData.body;
+            },
+            error: (error) => {
+              console.error('Error getting comments', error);
+            }
+          });
+        });
+
         this.toggleSpinner();
         if (!this.posts.length) {
           this.noPostsMessage = 'There are no posts associated with this user';
@@ -80,24 +89,6 @@ export class UserComponent implements OnInit {
       },
       error: (error) => {
         this.setMessage('Error getting posts', 3000, 'error');
-        this.toggleSpinner();
-      }
-    });
-  }
-
-  getPostComments(postId: number) {
-    this.toggleSpinner();
-    this.selectedPostId = postId;
-
-    this.apiService.get(`posts/${postId}/comments`).subscribe({
-      next: (data) => {
-        console.log('comments', data.body);
-        this.comments = data.body;
-        this.showComments = true;
-        this.toggleSpinner();
-      },
-      error: (error) => {
-        this.setMessage('Error getting comments', 3000, 'error');
         this.toggleSpinner();
       }
     });
@@ -119,29 +110,30 @@ export class UserComponent implements OnInit {
 
   toggleSpinner() {
     this.spinner = !this.spinner;
-    this.body.classList.toggle('overflow-html');
   }
 
   toggleForm(postId: number) {
     this.hideForm[postId] = !this.hideForm[postId];
   }
 
-  addComment() {
-    const postId = this.selectedPostId;
+  toggleComments(postId: number) {
+    this.hideComments[postId] = !this.hideComments[postId];
+  }
+
+  addComment(post_id: number) {
+    const postId = post_id;
 
     if (postId !== null) {
       this.apiService.post(`posts/${postId}/comments`, this.commentForm.value).subscribe({
         next: (data: any) => {
-          this.getPostComments(postId);
           this.setMessage('Comment created successfully', 3000, 'confirm');
           this.commentForm.reset();
           this.toggleForm(postId);
+          this.getUserPosts();
         },
         error: (error) => {
           this.toggleSpinner();
           this.setMessage('Error adding comment', 3000, 'error');
-          this.commentForm.reset();
-          this.toggleForm(postId);
           this.toggleSpinner();
         }
       });
