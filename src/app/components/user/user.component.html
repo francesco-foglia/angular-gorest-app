@@ -15,11 +15,26 @@
 
   <div *ngIf="user.id" class="mt-10 mb-9">
 
-    <p> <span class="text-[#c2185b] break-words">ID:</span> {{user.id}} </p>
-    <p> <span class="text-[#c2185b] break-words">Name:</span> {{user.name}} </p>
-    <p> <span class="text-[#c2185b] break-words">Email:</span> {{user.email}} </p>
-    <p> <span class="text-[#c2185b] break-words">Gender:</span> {{user.gender}} </p>
-    <p> <span class="text-[#c2185b] break-words">Status:</span> {{user.status}} </p>
+    <p class="flex justify-start items-start">
+      <span class="text-[#c2185b] break-all mr-1">ID: &nbsp;</span>
+      <span class="break-all">{{user.id}}</span>
+    </p>
+    <p class="flex justify-start items-start">
+      <span class="text-[#c2185b] break-all mr-1">Name: &nbsp;</span>
+      <span class="break-all">{{user.name}}</span>
+    </p>
+    <p class="flex justify-start items-start">
+      <span class="text-[#c2185b] break-all mr-1">Email: &nbsp;</span>
+      <span class="break-all">{{user.email}}</span>
+    </p>
+    <p class="flex justify-start items-start">
+      <span class="text-[#c2185b] break-all mr-1">Gender: &nbsp;</span>
+      <span class="break-all">{{user.gender}}</span>
+    </p>
+    <p class="flex justify-start items-start">
+      <span class="text-[#c2185b] break-all mr-1">Status: &nbsp;</span>
+      <span class="break-all">{{user.status}}</span>
+    </p>
 
     <div *ngIf="posts.length > 0" class="mt-10">
 
@@ -80,27 +95,23 @@
                   <mat-panel-description>
                   </mat-panel-description>
                 </mat-expansion-panel-header>
-                <div *ngFor="let comment of post.comments">
-                  <span>
-                    <small class=" break-words">
-                      <span class="text-[#c2185b]">
-                        {{ comment.name }}</span> -
-                      <span class="text-[#c2185b]">
-                        {{ comment.email }}
-                      </span> </small>
-                  </span>
-                  <p>
-                    {{comment.body}}
-                  </p>
+                <div *ngFor="let comment of post.comments" class="pt-3">
+                  <div class="text-gray-400">
+                    <small>{{ comment.name }}</small>
+                    &nbsp;
+                    <small>{{ comment.email }}</small>
+                  </div>
+                  <p class="">{{comment.body}}</p>
                 </div>
               </mat-expansion-panel>
             </mat-accordion>
           </div>
 
-          <div *ngIf="!spinner && !post.comments.length && noCommentsMessage" class="w-full md:w-1/2 p-4">
-            <mat-card>
-              <mat-card-content>{{noCommentsMessage}}</mat-card-content>
-            </mat-card>
+          <div *ngIf="!spinner && !post.comments.length && noCommentsMessage" class="w-full md:w-1/2 pt-4 md:pl-4">
+            <div
+              class="w-full h-[48px] flex justify-start items-center px-[24px] bg-[#424242] rounded-[4px] box_shadow">
+              {{noCommentsMessage}}
+            </div>
           </div>
         </div>
 
