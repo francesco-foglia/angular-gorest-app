@@ -19,9 +19,6 @@ export class UserComponent implements OnInit {
   userId: string = '';
   user: any = {};
   posts: any = [];
-  comments: any = [];
-  hideForm: { [postId: number]: boolean } = {};
-  hideComments: { [postId: number]: boolean } = {};
   selectedPostId!: number;
 
   commentForm: FormGroup = new FormGroup({});
@@ -116,32 +113,21 @@ export class UserComponent implements OnInit {
     this.spinner = !this.spinner;
   }
 
-  toggleForm(postId: number) {
-    this.hideForm[postId] = !this.hideForm[postId];
-  }
-
-  toggleComments(postId: number) {
-    this.hideComments[postId] = !this.hideComments[postId];
-  }
-
   addComment(post_id: number) {
     const postId = post_id;
 
-    if (postId !== null) {
-      this.apiService.post(`posts/${postId}/comments`, this.commentForm.value).subscribe({
-        next: (data: any) => {
-          this.setMessage('Comment created successfully', 3000, 'confirm');
-          this.commentForm.reset();
-          this.toggleForm(postId);
-          this.getUserPosts();
-        },
-        error: (error) => {
-          this.toggleSpinner();
-          this.setMessage('Error adding comment', 3000, 'error');
-          this.toggleSpinner();
-        }
-      });
-    }
+    this.apiService.post(`posts/${postId}/comments`, this.commentForm.value).subscribe({
+      next: (data: any) => {
+        this.setMessage('Comment created successfully', 3000, 'confirm');
+        this.commentForm.reset();
+        this.getUserPosts();
+      },
+      error: (error) => {
+        this.toggleSpinner();
+        this.setMessage('Error adding comment', 3000, 'error');
+        this.toggleSpinner();
+      }
+    });
   }
 
 }
