@@ -13,7 +13,7 @@
     </mat-card>
   </div>
 
-  <div *ngIf="user.id" class="my-10">
+  <div *ngIf="user.id" class="mt-10 mb-9">
 
     <p> <span class="text-[#c2185b] break-words">ID:</span> {{user.id}} </p>
     <p> <span class="text-[#c2185b] break-words">Name:</span> {{user.name}} </p>
@@ -26,72 +26,84 @@
       <h2>Posts <span>({{posts.length}})</span></h2>
 
       <div class="my-5" *ngFor="let post of posts">
-        <mat-card>
-          <mat-card-content>
-            <h3>{{post.title}}</h3>
-            <p>{{post.body}}</p>
-          </mat-card-content>
-        </mat-card>
+        <mat-divider></mat-divider>
+
+        <article class="mt-5">
+          <h3>{{post.title}}</h3>
+          <p>{{post.body}}</p>
+        </article>
 
         <div class="flex flex-col md:flex-row justify-start items-start">
-          <div class="w-full md:w-1/2 p-4">
-            <button (click)="toggleForm(post.id)" class="flex justify-start items-center">
-              <span>Add Comment</span>
-              <mat-icon>{{!hideForm[post.id] ? 'expand_more' : 'expand_less'}}</mat-icon>
-            </button>
-            <div [ngClass]="{'hidden mt-4': !hideForm[post.id], 'block mt-4': hideForm[post.id]}">
-              <form [formGroup]="commentForm">
-                <mat-form-field class="min-w-[250px]">
-                  <mat-label>Name</mat-label>
-                  <input matInput value="" type="text" formControlName="name">
-                </mat-form-field>
-
-                <mat-form-field class="min-w-[250px]">
-                  <mat-label>Email</mat-label>
-                  <input matInput value="" type="email" formControlName="email">
-                </mat-form-field>
-
-                <div>
-                  <mat-form-field class="w-full min-w-[250px] max-w-[500px]">
-                    <mat-label>Comment</mat-label>
-                    <textarea matInput type="text" formControlName="body"></textarea>
+          <div class="w-full md:w-1/2 pt-4 md:pr-2">
+            <mat-accordion>
+              <mat-expansion-panel hideToggle>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Add Comment
+                  </mat-panel-title>
+                  <mat-panel-description>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <form [formGroup]="commentForm">
+                  <mat-form-field class="w-full max-w-[250px]">
+                    <mat-label>Name</mat-label>
+                    <input matInput value="" type="text" formControlName="name">
                   </mat-form-field>
-                </div>
-                <button type="submit" mat-raised-button color="primary" [disabled]="!commentForm.valid"
-                  (click)="addComment(post.id)">
-                  <mat-icon>add</mat-icon>
-                </button>
-              </form>
-            </div>
+
+                  <mat-form-field class="w-full max-w-[250px]">
+                    <mat-label>Email</mat-label>
+                    <input matInput value="" type="email" formControlName="email">
+                  </mat-form-field>
+
+                  <div>
+                    <mat-form-field class="w-full max-w-[500px]">
+                      <mat-label>Comment</mat-label>
+                      <textarea matInput type="text" formControlName="body"></textarea>
+                    </mat-form-field>
+                  </div>
+                  <button type="submit" mat-raised-button color="primary" [disabled]="!commentForm.valid"
+                    (click)="addComment(post.id)">
+                    <mat-icon>add</mat-icon>
+                  </button>
+                </form>
+              </mat-expansion-panel>
+            </mat-accordion>
           </div>
 
-          <div *ngIf="post.comments.length > 0" class="w-full md:w-1/2 p-4">
-            <button (click)="toggleComments(post.id)" class="flex justify-start items-center">
-              <span>Comments ({{post.comments.length}})</span>
-              <mat-icon>{{!hideComments[post.id] ? 'expand_more' : 'expand_less'}}</mat-icon>
-            </button>
-            <div *ngFor="let comment of post.comments"
-              [ngClass]="{'hidden mt-4': !hideComments[post.id], 'block mt-4': hideComments[post.id]}">
-              <span>
-                <small class=" break-words">
-                  <span class="text-[#c2185b]">
-                    {{ comment.name }}</span> -
-                  <span class="text-[#c2185b]">
-                    {{ comment.email }}
-                  </span> </small>
-              </span>
-              <p>
-                {{comment.body}}
-              </p>
-            </div>
+          <div *ngIf="post.comments.length > 0" class="w-full md:w-1/2 pt-4 md:pl-4">
+            <mat-accordion>
+              <mat-expansion-panel hideToggle>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Comments ({{post.comments.length}})
+                  </mat-panel-title>
+                  <mat-panel-description>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div *ngFor="let comment of post.comments">
+                  <span>
+                    <small class=" break-words">
+                      <span class="text-[#c2185b]">
+                        {{ comment.name }}</span> -
+                      <span class="text-[#c2185b]">
+                        {{ comment.email }}
+                      </span> </small>
+                  </span>
+                  <p>
+                    {{comment.body}}
+                  </p>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
           </div>
 
           <div *ngIf="!spinner && !post.comments.length && noCommentsMessage" class="w-full md:w-1/2 p-4">
-            There are no comments associated with this post
+            <mat-card>
+              <mat-card-content>{{noCommentsMessage}}</mat-card-content>
+            </mat-card>
           </div>
         </div>
 
-        <mat-divider></mat-divider>
       </div>
 
     </div>

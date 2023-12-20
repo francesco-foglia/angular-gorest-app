@@ -53,7 +53,6 @@ export class UserComponent implements OnInit {
     this.apiService.get(`users/${this.userId}`).subscribe({
       next: (response: HttpResponse<any>) => {
         this.user = response.body;
-        console.log('user', this.user);
         this.toggleSpinner();
       },
       error: (error) => {
@@ -68,30 +67,28 @@ export class UserComponent implements OnInit {
 
     this.apiService.get(`users/${this.userId}/posts`).subscribe({
       next: (data) => {
-        console.log('posts', data.body);
         this.posts = data.body;
 
         this.posts.forEach((post: any) => {
           post.comments = [];
           this.apiService.get(`posts/${post.id}/comments`).subscribe({
             next: (commentsData) => {
-              console.log('comments', commentsData.body);
               post.comments = commentsData.body;
 
               if (!post.comments.length) {
-                this.noCommentsMessage = 'There are no comments associated with this post';
+                this.noCommentsMessage = 'Comments (0)';
               }
 
             },
             error: (error) => {
-              console.error('Error getting comments', error);
+              this.setMessage('Error getting comments', 3000, 'error');
             }
           });
         });
 
         this.toggleSpinner();
         if (!this.posts.length) {
-          this.noPostsMessage = 'There are no posts associated with this user';
+          this.noPostsMessage = 'There are no posts published by this user';
         }
       },
       error: (error) => {
