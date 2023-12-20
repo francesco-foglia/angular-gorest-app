@@ -39,17 +39,16 @@ export class UsersComponent implements OnInit {
   ngOnInit(): void {
     this.getUsers();
 
-    this.userForm = new FormGroup({
-      name: new FormControl('', Validators.required),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      gender: new FormControl('', Validators.required),
-      status: new FormControl('', Validators.required),
+    this.userForm = this.formBuilder.group({
+      name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      gender: ['', Validators.required],
+      status: ['', Validators.required],
     });
   }
 
   getUsers() {
-    this.toggleSpinner();
-
+    this.spinner = true;
     this.apiService.get(`users?name=${this.searchName}&email=${this.searchEmail}&page=${this.currentPage}&per_page=${this.resultsPerPage}`).subscribe({
       next: (response: HttpResponse<any>) => {
 
@@ -63,12 +62,11 @@ export class UsersComponent implements OnInit {
         this.pages = Math.ceil(this.total / this.resultsPerPage);
 
         this.users = response.body;
-
-        this.toggleSpinner();
+        this.spinner = false;
       },
       error: (error) => {
         this.setMessage('Error getting users', 3000, 'error');
-        this.toggleSpinner();
+        this.spinner = false;
       }
     });
   }
@@ -89,30 +87,19 @@ export class UsersComponent implements OnInit {
 
   deleteUser(userId: number) {
     if (confirm('Are you sure you want to delete this user?')) {
-
       this.disabled = true;
       this.apiService.delete(`users/${userId}`).subscribe({
         next: (data: any) => {
           this.setMessage('User deleted successfully', 3000, 'confirm');
-          this.clearName();
-          this.clearEmail();
           this.getUsers();
           this.disabled = false;
         },
         error: (error) => {
-          this.toggleSpinner();
           this.setMessage('Error deleting user', 3000, 'error');
-          this.clearName();
-          this.clearEmail();
-          this.toggleSpinner();
           this.disabled = false;
         }
       });
     }
-  }
-
-  toggleSpinner() {
-    this.spinner = !this.spinner;
   }
 
   setMessage(message: string, duration: number, messageType: 'confirm' | 'error') {
@@ -151,20 +138,18 @@ export class UsersComponent implements OnInit {
         this.clearEmail();
         formDirective.resetForm();
         this.userForm.reset();
+        this.currentPage = 1;
         this.getUsers();
       },
       error: (error) => {
-        this.toggleSpinner();
         if (error.error[0].message === "has already been taken") {
           this.setMessage(`User Email ${error.error[0].message}`, 3000, 'error');
           this.clearName();
           this.clearEmail();
-          this.toggleSpinner();
         } else {
           this.setMessage('Error adding user', 3000, 'error');
           this.clearName();
           this.clearEmail();
-          this.toggleSpinner();
         }
       }
     });
