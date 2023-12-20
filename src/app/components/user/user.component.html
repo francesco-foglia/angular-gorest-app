@@ -65,7 +65,7 @@
             </div>
           </div>
 
-          <div *ngIf="post.comments" class="w-full md:w-1/2 p-4">
+          <div *ngIf="post.comments.length > 0" class="w-full md:w-1/2 p-4">
             <button (click)="toggleComments(post.id)" class="flex justify-start items-center">
               <span>Comments ({{post.comments.length}})</span>
               <mat-icon>{{!hideComments[post.id] ? 'expand_more' : 'expand_less'}}</mat-icon>
@@ -84,6 +84,10 @@
                 {{comment.body}}
               </p>
             </div>
+          </div>
+
+          <div *ngIf="!spinner && !post.comments.length && noCommentsMessage" class="w-full md:w-1/2 p-4">
+            There are no comments associated with this post
           </div>
         </div>
 

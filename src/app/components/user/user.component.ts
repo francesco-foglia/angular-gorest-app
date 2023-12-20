@@ -14,6 +14,7 @@ export class UserComponent implements OnInit {
   confirmMessage: string = '';
   errorMessage: string = '';
   noPostsMessage: string = '';
+  noCommentsMessage: string = '';
   spinner: boolean = false;
   userId: string = '';
   user: any = {};
@@ -71,10 +72,16 @@ export class UserComponent implements OnInit {
         this.posts = data.body;
 
         this.posts.forEach((post: any) => {
+          post.comments = [];
           this.apiService.get(`posts/${post.id}/comments`).subscribe({
             next: (commentsData) => {
               console.log('comments', commentsData.body);
               post.comments = commentsData.body;
+
+              if (!post.comments.length) {
+                this.noCommentsMessage = 'There are no comments associated with this post';
+              }
+
             },
             error: (error) => {
               console.error('Error getting comments', error);
