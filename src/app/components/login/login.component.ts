@@ -26,8 +26,8 @@ export class LoginComponent implements OnInit {
       this.router.navigate(['/users']);
     }
 
-    this.loginForm = new FormGroup({
-      token: new FormControl('', Validators.required),
+    this.loginForm = this.formBuilder.group({
+      token: ['', Validators.required],
     });
   }
 
@@ -37,7 +37,6 @@ export class LoginComponent implements OnInit {
       sessionStorage.setItem('token', this.loginForm.value.token.trim());
       this.login();
     } else {
-      this.spinner = false;
       this.errorMessage = 'Fill in the Token field';
     }
   }
@@ -57,8 +56,10 @@ export class LoginComponent implements OnInit {
         } else {
           this.errorMessage = 'An error occurred while logging in';
         }
-        this.spinner = false;
         sessionStorage.removeItem('token');
+      },
+      complete: () => {
+        this.spinner = false;
       }
     });
   }
