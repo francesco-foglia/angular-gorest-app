@@ -4,7 +4,8 @@
 
   <h1>Users</h1>
 
-  <div *ngIf="confirmMessage || errorMessage" class="w-full lg:w-1/2 my-10">
+  <div *ngIf="confirmMessage || errorMessage"
+    class="fixed top-0 left-0 z-[1] w-full h-screen flex justify-center items-center">
     <mat-card>
       <mat-card-content [ngClass]="{'text-green-500': confirmMessage, 'text-red-500': errorMessage}">
         {{confirmMessage ? confirmMessage : errorMessage}}
@@ -14,7 +15,7 @@
 
   <div class="my-10">
     <small>Add New User</small>
-    <form [formGroup]="userForm" (ngSubmit)="addUser()">
+    <form [formGroup]="userForm" #formDirective="ngForm">
 
       <mat-form-field class="min-w-[250px]">
         <mat-label>Name</mat-label>
@@ -45,41 +46,40 @@
       </mat-form-field>
 
       <span class="mr-4"></span>
-      <button type="submit" mat-raised-button color="primary" [disabled]="!userForm.valid || loadingAllUsers">
+      <button type="submit" mat-raised-button color="primary" [disabled]="!userForm.valid"
+        (click)="addUser(formDirective)">
         <mat-icon>add</mat-icon>
       </button>
     </form>
   </div>
 
-  <ng-container *ngIf="loadingAllUsers; else searchbar">
-    <div class="my-10 text-[#c2185b]">
-      Wait for all users to load...
-    </div>
-  </ng-container>
-
-  <ng-template #searchbar>
-    <div *ngIf="!loadingAllUsers" class="my-10">
-      <mat-form-field class="w-full min-w-[250px] max-w-[500px]">
-        <mat-label>Search for the user by name or email</mat-label>
-        <input matInput (input)="searchUsers()" [(ngModel)]="searchTerm">
-        <button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchTerm" (click)="clearInput()">
-          <small>&#x2715;</small>
-        </button>
-      </mat-form-field>
-    </div>
-  </ng-template>
-
-  <div *ngIf="searchTerm !== ''" class="my-10">
-    {{searchedUsersLength}} results
+  <div class="mt-10">
+    <mat-form-field class="w-full min-w-[250px] max-w-[500px]">
+      <mat-label>Search for the user by name</mat-label>
+      <input matInput (input)="getUsers()" [(ngModel)]="searchName">
+      <button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchName" (click)="clearName()">
+        <small>&#x2715;</small>
+      </button>
+    </mat-form-field>
   </div>
 
-  <div *ngIf="users.length > 0 && searchTerm === ''" class="my-10">
+  <div class="mb-10">
+    <mat-form-field class="w-full min-w-[250px] max-w-[500px]">
+      <mat-label>Search for the user by email</mat-label>
+      <input matInput (input)="getUsers()" [(ngModel)]="searchEmail">
+      <button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchEmail" (click)="clearEmail()">
+        <small>&#x2715;</small>
+      </button>
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="users.length > 0" class="my-10">
     <p><span class="text-[#c2185b]">Page:</span> {{currentPage}} of {{pages}}</p>
     <div class="mb-2"></div>
     <p><span class="text-[#c2185b]">Results:</span> {{paginationResults()}}</p>
   </div>
 
-  <div *ngIf="users.length > 0 && searchTerm === ''" class="my-10">
+  <div *ngIf="users.length > 0" class="my-10">
     <button (click)="previousPage()" mat-raised-button color="primary" [disabled]="currentPage === 1">
       <mat-icon>arrow_back</mat-icon>
     </button>
@@ -95,14 +95,13 @@
       <li *ngFor="let user of users" class="mb-6 flex justify-start items-center">
         <div class="flex">
           <div class="m-auto mr-4 mb-[12px]">
-            <button mat-raised-button (click)="deleteUser(user.id)" [disabled]="loadingAllUsers">
+            <button mat-raised-button (click)="deleteUser(user.id)" [disabled]="disabled">
               <mat-icon>delete</mat-icon>
             </button>
           </div>
         </div>
         <div class="whitespace-break-spaces">
-          <a [routerLink]="['/users', user.id]" class="flex flex-wrap hover:underline underline-offset-2"
-            [ngClass]="{'pointer-events-none': loadingAllUsers, 'pointer-events-auto': !loadingAllUsers}">
+          <a [routerLink]="['/users', user.id]" class="flex flex-wrap hover:underline underline-offset-2">
             <p class="flex">
               <span class="text-[#c2185b]">Name: </span>
               <span class="break-all">{{ user.name }} &nbsp; &nbsp;</span>
@@ -117,7 +116,7 @@
     </ul>
   </div>
 
-  <div *ngIf="spinner" class="spinner-container w-full h-screen top-0 left-0 z-[1] flex justify-center items-center">
+  <div *ngIf="spinner" class="fixed top-0 left-0 z-[1] w-full h-screen flex justify-center items-center">
     <mat-spinner></mat-spinner>
   </div>
 

@@ -13,7 +13,6 @@ export class UsersComponent implements OnInit {
   confirmMessage: string = '';
   errorMessage: string = '';
   spinner: boolean = false;
-  body: any = document.getElementsByTagName('body')[0];
   users: any[] = [];
   currentPage: number = 1;
   resultsPerPage: number = 20;
@@ -26,24 +25,19 @@ export class UsersComponent implements OnInit {
     status: '',
   };
 
-  // Pagination
   total: number = 0;
   pages: number = 0;
   page: number = 0;
   limit: number = 0;
 
-  loadingAllUsers: boolean = false;
-  allUsersArray: any[] = [];
-
-  searchedUsers: any[] = [];
-  searchedUsersLength: number = 0;
-  searchTerm: string = '';
+  searchName: string = '';
+  searchEmail: string = '';
+  disabled: boolean = false;
 
   constructor(private formBuilder: FormBuilder, private apiService: ApiService) { }
 
   ngOnInit(): void {
     this.getUsers();
-    this.getAllUsers();
 
     this.userForm = new FormGroup({
       name: new FormControl('', Validators.required),
@@ -56,7 +50,7 @@ export class UsersComponent implements OnInit {
   getUsers() {
     this.toggleSpinner();
 
-    this.apiService.get(`users?page=${this.currentPage}&per_page=${this.resultsPerPage}`).subscribe({
+    this.apiService.get(`users?name=${this.searchName}&email=${this.searchEmail}&page=${this.currentPage}&per_page=${this.resultsPerPage}`).subscribe({
       next: (response: HttpResponse<any>) => {
 
         const headers = response.headers;
@@ -79,55 +73,16 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  getAllUsers() {
-    this.getAllUsersRecursive(1, []);
-  }
-
-  getAllUsersRecursive(page: number, allUsers: any[]) {
-    this.loadingAllUsers = true;
-    const url = `users?page=${page}&per_page=100`;
-
-    this.apiService.get(url).subscribe({
-      next: (response: HttpResponse<any>) => {
-        if (response.body.length > 0) {
-          allUsers = allUsers.concat(response.body);
-          setTimeout(() => {
-            this.getAllUsersRecursive(page + 1, allUsers);
-          }, 100);
-        } else {
-          this.allUsersArray = allUsers;
-          this.loadingAllUsers = false;
-        }
-      },
-      error: (error) => {
-        if (error.status === 429) {
-          this.setMessage('Error getting all users. Please log out and try again later', 5000, 'error');
-        } else {
-          this.setMessage('Error getting all users', 3000, 'error');
-        }
-      }
-    });
-  }
-
-  searchUsers() {
-    if (this.searchTerm.trim() !== '') {
-      this.toggleSpinner();
-      this.searchedUsers = this.allUsersArray.filter(user =>
-        user.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(this.searchTerm.toLowerCase())
-      );
-      this.users = this.searchedUsers;
-      this.searchedUsersLength = this.searchedUsers.length;
-      this.toggleSpinner();
-    } else {
+  clearName() {
+    if (this.searchName !== '') {
+      this.searchName = '';
       this.getUsers();
     }
   }
 
-  clearInput() {
-    if (this.searchTerm !== '') {
-      this.searchTerm = '';
-      this.searchedUsersLength = 0;
+  clearEmail() {
+    if (this.searchEmail !== '') {
+      this.searchEmail = '';
       this.getUsers();
     }
   }
@@ -135,18 +90,22 @@ export class UsersComponent implements OnInit {
   deleteUser(userId: number) {
     if (confirm('Are you sure you want to delete this user?')) {
 
+      this.disabled = true;
       this.apiService.delete(`users/${userId}`).subscribe({
         next: (data: any) => {
-          this.getUsers();
           this.setMessage('User deleted successfully', 3000, 'confirm');
-          this.clearInput();
-          this.getAllUsers();
+          this.clearName();
+          this.clearEmail();
+          this.getUsers();
+          this.disabled = false;
         },
         error: (error) => {
           this.toggleSpinner();
           this.setMessage('Error deleting user', 3000, 'error');
-          this.clearInput();
+          this.clearName();
+          this.clearEmail();
           this.toggleSpinner();
+          this.disabled = false;
         }
       });
     }
@@ -154,7 +113,6 @@ export class UsersComponent implements OnInit {
 
   toggleSpinner() {
     this.spinner = !this.spinner;
-    this.body.classList.toggle('overflow-html');
   }
 
   setMessage(message: string, duration: number, messageType: 'confirm' | 'error') {
@@ -185,26 +143,27 @@ export class UsersComponent implements OnInit {
     }
   }
 
-  addUser() {
+  addUser(formDirective: any) {
     this.apiService.post('users', this.userForm.value).subscribe({
       next: (data: any) => {
-        this.getUsers();
         this.setMessage('User created successfully', 3000, 'confirm');
-        this.clearInput();
+        this.clearName();
+        this.clearEmail();
+        formDirective.resetForm();
         this.userForm.reset();
-        this.getAllUsers();
+        this.getUsers();
       },
       error: (error) => {
         this.toggleSpinner();
         if (error.error[0].message === "has already been taken") {
           this.setMessage(`User Email ${error.error[0].message}`, 3000, 'error');
-          this.clearInput();
-          this.userForm.reset();
+          this.clearName();
+          this.clearEmail();
           this.toggleSpinner();
         } else {
           this.setMessage('Error adding user', 3000, 'error');
-          this.clearInput();
-          this.userForm.reset();
+          this.clearName();
+          this.clearEmail();
           this.toggleSpinner();
         }
       }
