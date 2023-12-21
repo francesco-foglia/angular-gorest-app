@@ -37,31 +37,32 @@ export class UserComponent implements OnInit {
       this.getUserPosts();
     });
 
-    this.commentForm = new FormGroup({
-      body: new FormControl('', Validators.required),
-      name: new FormControl('', Validators.required),
-      email: new FormControl('', [Validators.required, Validators.email]),
+    this.commentForm = this.formBuilder.group({
+      body: ['', Validators.required],
+      name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
     });
   }
 
   getUser() {
-    this.toggleSpinner();
-
+    this.spinner = true;
     this.apiService.get(`users/${this.userId}`).subscribe({
       next: (response: HttpResponse<any>) => {
         this.user = response.body;
-        this.toggleSpinner();
+
       },
       error: (error) => {
         this.setMessage('Error getting user', 3000, 'error');
-        this.toggleSpinner();
+
+      },
+      complete: () => {
+        this.spinner = false;
       }
     });
   }
 
   getUserPosts() {
-    this.toggleSpinner();
-
+    this.spinner = true;
     this.apiService.get(`users/${this.userId}/posts`).subscribe({
       next: (data) => {
         this.posts = data.body;
@@ -83,14 +84,15 @@ export class UserComponent implements OnInit {
           });
         });
 
-        this.toggleSpinner();
         if (!this.posts.length) {
           this.noPostsMessage = 'There are no posts published by this user';
         }
       },
       error: (error) => {
         this.setMessage('Error getting posts', 3000, 'error');
-        this.toggleSpinner();
+      },
+      complete: () => {
+        this.spinner = false;
       }
     });
   }
@@ -109,23 +111,19 @@ export class UserComponent implements OnInit {
     }
   }
 
-  toggleSpinner() {
-    this.spinner = !this.spinner;
-  }
+
 
   addComment(post_id: number) {
     const postId = post_id;
 
     this.apiService.post(`posts/${postId}/comments`, this.commentForm.value).subscribe({
       next: (data: any) => {
-        this.setMessage('Comment created successfully', 3000, 'confirm');
+        this.setMessage('Comment added successfully', 3000, 'confirm');
         this.commentForm.reset();
         this.getUserPosts();
       },
       error: (error) => {
-        this.toggleSpinner();
         this.setMessage('Error adding comment', 3000, 'error');
-        this.toggleSpinner();
       }
     });
   }

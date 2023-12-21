@@ -62,10 +62,11 @@ export class UsersComponent implements OnInit {
         this.pages = Math.ceil(this.total / this.resultsPerPage);
 
         this.users = response.body;
-        this.spinner = false;
       },
       error: (error) => {
         this.setMessage('Error getting users', 3000, 'error');
+      },
+      complete: () => {
         this.spinner = false;
       }
     });
@@ -133,7 +134,7 @@ export class UsersComponent implements OnInit {
   addUser(formDirective: any) {
     this.apiService.post('users', this.userForm.value).subscribe({
       next: (data: any) => {
-        this.setMessage('User created successfully', 3000, 'confirm');
+        this.setMessage('User added successfully', 3000, 'confirm');
         this.clearName();
         this.clearEmail();
         formDirective.resetForm();
