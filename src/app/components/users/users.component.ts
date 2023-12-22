@@ -145,12 +145,12 @@ export class UsersComponent implements OnInit {
       error: (error) => {
         if (error.error[0].message === "has already been taken") {
           this.setMessage(`User Email ${error.error[0].message}`, 3000, 'error');
-          this.clearName();
-          this.clearEmail();
+          // this.clearName();
+          // this.clearEmail();
         } else {
           this.setMessage('Error adding user', 3000, 'error');
-          this.clearName();
-          this.clearEmail();
+          // this.clearName();
+          // this.clearEmail();
         }
       }
     });

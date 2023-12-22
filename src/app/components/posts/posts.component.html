@@ -5,12 +5,32 @@
   <h1>Posts</h1>
 
   <div *ngIf="confirmMessage || errorMessage"
-    class="fixed top-0 left-0 z-[3] w-full h-screen flex justify-center items-center">
+    class="fixed top-0 left-0 z-[2] w-full h-screen flex justify-center items-center">
     <mat-card>
       <mat-card-content [ngClass]="{'text-green-500': confirmMessage, 'text-red-500': errorMessage}">
         {{confirmMessage ? confirmMessage : errorMessage}}
       </mat-card-content>
     </mat-card>
+  </div>
+
+  <div class="mt-10">
+    <mat-form-field class="w-full min-w-[250px] max-w-[500px]">
+      <mat-label>Search for the post by title</mat-label>
+      <input matInput (input)="getPosts()" [(ngModel)]="searchTitle">
+      <button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchTitle" (click)="clearTitle()">
+        <small>&#x2715;</small>
+      </button>
+    </mat-form-field>
+  </div>
+
+  <div class="mb-10">
+    <mat-form-field class="w-full min-w-[250px] max-w-[500px]">
+      <mat-label>Search for the post by text</mat-label>
+      <input matInput (input)="getPosts()" [(ngModel)]="searchText">
+      <button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchText" (click)="clearText()">
+        <small>&#x2715;</small>
+      </button>
+    </mat-form-field>
   </div>
 
   <div *ngIf="posts.length > 0" class="my-10">
@@ -38,11 +58,35 @@
           <h2>{{ post.title }}</h2>
           <p>{{ post.body }}</p>
         </div>
+
+        <div class="my-10">
+          <small>Add New Post</small>
+          <form [formGroup]="postForm" #formDirective="ngForm">
+
+            <mat-form-field class="min-w-[250px]">
+              <mat-label>Title</mat-label>
+              <input matInput value="" type="text" formControlName="title">
+            </mat-form-field>
+
+            <div>
+              <mat-form-field class="w-full max-w-[500px]">
+                <mat-label>Text</mat-label>
+                <textarea matInput type="text" formControlName="body"></textarea>
+              </mat-form-field>
+            </div>
+
+            <button type="submit" mat-raised-button color="primary" [disabled]="!postForm.valid"
+              (click)="addPost(post.user_id, formDirective)">
+              <mat-icon>add</mat-icon>
+            </button>
+          </form>
+        </div>
+
       </li>
     </ul>
   </div>
 
-  <div *ngIf="spinner" class="fixed top-0 left-0 z-[4] w-full h-screen flex justify-center items-center">
+  <div *ngIf="spinner" class="fixed top-0 left-0 z-[3] w-full h-screen flex justify-center items-center">
     <mat-spinner></mat-spinner>
   </div>
 
