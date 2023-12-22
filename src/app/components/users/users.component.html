@@ -79,7 +79,7 @@
     <p><span class="text-[#c2185b]">Results:</span> {{paginationResults()}}</p>
   </div>
 
-  <div *ngIf="users.length === 0" class="my-10">
+  <div *ngIf="users.length === 0 && !spinner" class="my-10">
     <p>No results found</p>
   </div>
 

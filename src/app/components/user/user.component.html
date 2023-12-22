@@ -36,7 +36,7 @@
       <span class="break-all">{{user.status}}</span>
     </p>
 
-    <div *ngIf="posts.length > 0" class="mt-10">
+    <div *ngIf="posts.length > 0 && loaded" class="mt-10">
 
       <h2>Posts <span>({{posts.length}})</span></h2>
 
@@ -48,13 +48,13 @@
           <p>{{post.body}}</p>
         </article>
 
-        <button mat-raised-button (click)="getPostComments(post.id)" [disabled]="modalComments">
-          View Comments
+        <button mat-raised-button color="primary" (click)="getPostComments(post.id)" [disabled]="modalComments">
+          Comments ({{post.comments.length}})
         </button>
 
-        <div *ngIf="selectedPostId === post.id && modalComments" class="mt-10">
+        <div *ngIf="selectedPostId === post.id && modalComments" class="mt-10 relative">
 
-          <div class="w-[30px] flex justify-start items-center mb-3">
+          <div class="absolute top-[12px] left-[calc(100%-48px)] lg:left-[calc(50%-48px)] z-[1]">
             <mat-icon (click)="closeComments(); formDirective.resetForm();"
               class="bg-[#c2185b] text-white rounded cursor-pointer">close</mat-icon>
           </div>
@@ -64,7 +64,7 @@
               <mat-expansion-panel hideToggle>
                 <mat-expansion-panel-header>
                   <mat-panel-title>
-                    <span class="pt-0.5">Add Comments</span>
+                    <span class="pt-0.5">Add Comment</span>
                   </mat-panel-title>
                   <mat-panel-description>
                   </mat-panel-description>
@@ -98,7 +98,6 @@
           </div>
 
           <div *ngIf="comments.length > 0" class="px-6">
-            <h4 class="">Comments ({{comments.length}})</h4>
             <div *ngFor="let comment of comments" class="mt-6">
               <small class="text-gray-300 break-all block mb-1">{{comment.name}} - {{comment.email}}</small>
               <p>{{comment.body}}</p>
