@@ -11,6 +11,7 @@ import { ApiService } from '../../services/api.service';
 export class PostsComponent implements OnInit {
 
   posts: any[] = [];
+  comments: any[] = [];
   currentPage: number = 1;
   resultsPerPage: number = 20;
   spinner: boolean = false;
@@ -31,6 +32,9 @@ export class PostsComponent implements OnInit {
   searchTitle: string = '';
   searchText: string = '';
 
+  selectedPostId!: number;
+  modalComments: boolean = false;
+
   constructor(private formBuilder: FormBuilder, private apiService: ApiService) { }
 
   ngOnInit(): void {
@@ -46,7 +50,6 @@ export class PostsComponent implements OnInit {
     this.spinner = true;
     this.apiService.get(`posts?title=${this.searchTitle}&body=${this.searchText}&page=${this.currentPage}&per_page=${this.resultsPerPage}`).subscribe({
       next: (response: HttpResponse<any>) => {
-        console.log(response.body);
 
         const headers = response.headers;
 
@@ -58,9 +61,27 @@ export class PostsComponent implements OnInit {
         this.pages = Math.ceil(this.total / this.resultsPerPage);
 
         this.posts = response.body;
+        this.modalComments = false;
       },
       error: (error) => {
         this.setMessage('Error getting posts', 3000, 'error');
+      },
+      complete: () => {
+        this.spinner = false;
+      }
+    });
+  }
+
+  getPostComments(postId: number,) {
+    this.spinner = true;
+    this.selectedPostId = postId;
+    this.apiService.get(`posts/${postId}/comments`).subscribe({
+      next: (response: HttpResponse<any>) => {
+        this.comments = response.body;
+        this.modalComments = true;
+      },
+      error: (error) => {
+        this.setMessage('Error getting comments', 3000, 'error');
       },
       complete: () => {
         this.spinner = false;
@@ -85,6 +106,10 @@ export class PostsComponent implements OnInit {
   clearTitle() {
     if (this.searchTitle !== '') {
       this.searchTitle = '';
+      this.currentPage = 1;
+      this.getPosts();
+    } else {
+      this.currentPage = 1;
       this.getPosts();
     }
   }
@@ -92,6 +117,10 @@ export class PostsComponent implements OnInit {
   clearText() {
     if (this.searchText !== '') {
       this.searchText = '';
+      this.currentPage = 1;
+      this.getPosts();
+    } else {
+      this.currentPage = 1;
       this.getPosts();
     }
   }
@@ -133,6 +162,14 @@ export class PostsComponent implements OnInit {
         this.setMessage('Error adding post', 3000, 'error');
       }
     });
+  }
+
+  closeComments() {
+    this.spinner = true;
+    setTimeout(() => {
+      this.modalComments = false;
+      this.spinner = false;
+    }, 300);
   }
 
 }
