@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { HttpResponse } from '@angular/common/http';
 import { ApiService } from '../../services/api.service';
 
@@ -16,20 +17,34 @@ export class PostsComponent implements OnInit {
   confirmMessage: string = '';
   errorMessage: string = '';
 
+  postForm: FormGroup = new FormGroup({});
+  newPost: any = {
+    title: '',
+    body: '',
+  };
+
   total: number = 0;
   pages: number = 0;
   page: number = 0;
   limit: number = 0;
 
-  constructor(private apiService: ApiService) { }
+  searchTitle: string = '';
+  searchText: string = '';
+
+  constructor(private formBuilder: FormBuilder, private apiService: ApiService) { }
 
   ngOnInit(): void {
     this.getPosts();
+
+    this.postForm = this.formBuilder.group({
+      title: ['', Validators.required],
+      body: ['', Validators.required],
+    });
   }
 
   getPosts() {
     this.spinner = true;
-    this.apiService.get(`posts?page=${this.currentPage}&per_page=${this.resultsPerPage}`).subscribe({
+    this.apiService.get(`posts?title=${this.searchTitle}&body=${this.searchText}&page=${this.currentPage}&per_page=${this.resultsPerPage}`).subscribe({
       next: (response: HttpResponse<any>) => {
         console.log(response.body);
 
@@ -45,7 +60,7 @@ export class PostsComponent implements OnInit {
         this.posts = response.body;
       },
       error: (error) => {
-        this.setMessage('Error getting users', 3000, 'error');
+        this.setMessage('Error getting posts', 3000, 'error');
       },
       complete: () => {
         this.spinner = false;
@@ -64,6 +79,20 @@ export class PostsComponent implements OnInit {
       setTimeout(() => {
         this.errorMessage = '';
       }, duration);
+    }
+  }
+
+  clearTitle() {
+    if (this.searchTitle !== '') {
+      this.searchTitle = '';
+      this.getPosts();
+    }
+  }
+
+  clearText() {
+    if (this.searchText !== '') {
+      this.searchText = '';
+      this.getPosts();
     }
   }
 
@@ -87,6 +116,23 @@ export class PostsComponent implements OnInit {
       ${this.currentPage !== this.pages ? this.currentPage * this.resultsPerPage : this.total} of ${this.total}
     `;
     return results;
+  }
+
+  addPost(postId: number, formDirective: any) {
+    this.apiService.post(`users/${postId}/posts`, this.postForm.value).subscribe({
+      next: (data: any) => {
+        this.setMessage('Post added successfully', 3000, 'confirm');
+        this.clearTitle();
+        this.clearText();
+        formDirective.resetForm();
+        this.postForm.reset();
+        this.currentPage = 1;
+        this.getPosts();
+      },
+      error: (error) => {
+        this.setMessage('Error adding post', 3000, 'error');
+      }
+    });
   }
 
 }

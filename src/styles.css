@@ -32,3 +32,8 @@ body {
     border-radius: 5px;
   }
 }
+
+textarea {
+  min-height: 100px;
+  resize: none !important;
+}
