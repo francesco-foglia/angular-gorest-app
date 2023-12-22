@@ -14,7 +14,6 @@ export class UserComponent implements OnInit {
   confirmMessage: string = '';
   errorMessage: string = '';
   noPostsMessage: string = '';
-  noCommentsMessage: string = '';
   spinner: boolean = false;
   userId: string = '';
   user: any = {};
@@ -74,11 +73,6 @@ export class UserComponent implements OnInit {
             next: (commentsData) => {
               post.comments = commentsData.body;
               this.loaded = true;
-
-              if (!post.comments.length) {
-                this.noCommentsMessage = 'Comments (0)';
-              }
-
             },
             error: (error) => {
               this.setMessage('Error getting comments', 3000, 'error');
@@ -106,9 +100,6 @@ export class UserComponent implements OnInit {
       next: (response: HttpResponse<any>) => {
         this.comments = response.body;
         this.modalComments = true;
-        if (!this.comments.length) {
-          this.noCommentsMessage = 'Comments (0)';
-        }
       },
       error: (error) => {
         this.setMessage('Error getting comments', 3000, 'error');
