@@ -56,7 +56,7 @@
   <div class="mt-10">
     <mat-form-field class="w-full min-w-[250px] max-w-[500px]">
       <mat-label>Search for the user by name</mat-label>
-      <input matInput (input)="getUsers()" [(ngModel)]="searchName">
+      <input matInput (input)="searchName === '' ? clearName() : getUsers()" [(ngModel)]="searchName">
       <button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchName" (click)="clearName()">
         <small>&#x2715;</small>
       </button>
@@ -66,7 +66,7 @@
   <div class="mb-10">
     <mat-form-field class="w-full min-w-[250px] max-w-[500px]">
       <mat-label>Search for the user by email</mat-label>
-      <input matInput (input)="getUsers()" [(ngModel)]="searchEmail">
+      <input matInput (input)="searchEmail === '' ? clearEmail() : getUsers()" [(ngModel)]="searchEmail">
       <button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchEmail" (click)="clearEmail()">
         <small>&#x2715;</small>
       </button>
@@ -89,7 +89,7 @@
     </button>
     <span class="mr-4"></span>
     <button (click)="nextPage()" mat-raised-button color="primary"
-      [disabled]="this.users.length !== this.resultsPerPage ">
+      [disabled]="this.users.length !== this.resultsPerPage">
       <mat-icon>arrow_forward</mat-icon>
     </button>
   </div>
