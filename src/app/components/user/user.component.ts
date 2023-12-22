@@ -18,8 +18,10 @@ export class UserComponent implements OnInit {
   spinner: boolean = false;
   userId: string = '';
   user: any = {};
-  posts: any = [];
+  posts: any[] = [];
+  comments: any[] = [];
   selectedPostId!: number;
+  modalComments: boolean = false;
 
   commentForm: FormGroup = new FormGroup({});
   newComment: any = {
@@ -49,11 +51,9 @@ export class UserComponent implements OnInit {
     this.apiService.get(`users/${this.userId}`).subscribe({
       next: (response: HttpResponse<any>) => {
         this.user = response.body;
-
       },
       error: (error) => {
         this.setMessage('Error getting user', 3000, 'error');
-
       },
       complete: () => {
         this.spinner = false;
@@ -64,32 +64,34 @@ export class UserComponent implements OnInit {
   getUserPosts() {
     this.spinner = true;
     this.apiService.get(`users/${this.userId}/posts`).subscribe({
-      next: (data) => {
-        this.posts = data.body;
-
-        this.posts.forEach((post: any) => {
-          post.comments = [];
-          this.apiService.get(`posts/${post.id}/comments`).subscribe({
-            next: (commentsData) => {
-              post.comments = commentsData.body;
-
-              if (!post.comments.length) {
-                this.noCommentsMessage = 'Comments (0)';
-              }
-
-            },
-            error: (error) => {
-              this.setMessage('Error getting comments', 3000, 'error');
-            }
-          });
-        });
-
+      next: (response: HttpResponse<any>) => {
+        this.posts = response.body;
         if (!this.posts.length) {
           this.noPostsMessage = 'There are no posts published by this user';
         }
       },
       error: (error) => {
         this.setMessage('Error getting posts', 3000, 'error');
+      },
+      complete: () => {
+        this.spinner = false;
+      }
+    });
+  }
+
+  getPostComments(postId: number,) {
+    this.spinner = true;
+    this.selectedPostId = postId;
+    this.apiService.get(`posts/${postId}/comments`).subscribe({
+      next: (response: HttpResponse<any>) => {
+        this.comments = response.body;
+        this.modalComments = true;
+        if (!this.comments.length) {
+          this.noCommentsMessage = 'Comments (0)';
+        }
+      },
+      error: (error) => {
+        this.setMessage('Error getting comments', 3000, 'error');
       },
       complete: () => {
         this.spinner = false;
@@ -111,21 +113,27 @@ export class UserComponent implements OnInit {
     }
   }
 
-
-
-  addComment(post_id: number) {
-    const postId = post_id;
-
+  addComment(postId: number, formDirective: any) {
     this.apiService.post(`posts/${postId}/comments`, this.commentForm.value).subscribe({
       next: (data: any) => {
         this.setMessage('Comment added successfully', 3000, 'confirm');
+        formDirective.resetForm();
         this.commentForm.reset();
         this.getUserPosts();
+        this.getPostComments(postId);
       },
       error: (error) => {
         this.setMessage('Error adding comment', 3000, 'error');
       }
     });
+  }
+
+  closeComments() {
+    this.spinner = true;
+    setTimeout(() => {
+      this.modalComments = false;
+      this.spinner = false;
+    }, 300);
   }
 
 }

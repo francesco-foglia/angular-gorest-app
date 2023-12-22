@@ -43,23 +43,34 @@
       <div class="my-5" *ngFor="let post of posts">
         <mat-divider></mat-divider>
 
-        <article class="mt-5">
+        <article class="my-5">
           <h3>{{post.title}}</h3>
           <p>{{post.body}}</p>
         </article>
 
-        <div class="flex flex-col md:flex-row justify-start items-start">
-          <div class="w-full md:w-1/2 pt-4 md:pr-2">
+        <button mat-raised-button (click)="getPostComments(post.id)" [disabled]="modalComments">
+          View Comments
+        </button>
+
+        <div *ngIf="selectedPostId === post.id && modalComments" class="mt-10">
+
+          <div class="w-[30px] flex justify-start items-center mb-3">
+            <mat-icon (click)="closeComments(); formDirective.resetForm();"
+              class="bg-[#c2185b] text-white rounded cursor-pointer">close</mat-icon>
+          </div>
+
+          <div class="w-full lg:w-1/2 mb-10">
             <mat-accordion>
               <mat-expansion-panel hideToggle>
                 <mat-expansion-panel-header>
                   <mat-panel-title>
-                    Add Comment
+                    <span class="pt-0.5">Add Comments</span>
                   </mat-panel-title>
                   <mat-panel-description>
                   </mat-panel-description>
                 </mat-expansion-panel-header>
-                <form [formGroup]="commentForm">
+
+                <form [formGroup]="commentForm" #formDirective="ngForm">
                   <mat-form-field class="w-full max-w-[250px]">
                     <mat-label>Name</mat-label>
                     <input matInput value="" type="text" formControlName="name">
@@ -77,42 +88,27 @@
                     </mat-form-field>
                   </div>
                   <button type="submit" mat-raised-button color="primary" [disabled]="!commentForm.valid"
-                    (click)="addComment(post.id)">
+                    (click)="addComment(post.id, formDirective)">
                     <mat-icon>add</mat-icon>
                   </button>
                 </form>
+
               </mat-expansion-panel>
             </mat-accordion>
           </div>
 
-          <div *ngIf="post.comments.length > 0" class="w-full md:w-1/2 pt-4 md:pl-4">
-            <mat-accordion>
-              <mat-expansion-panel hideToggle>
-                <mat-expansion-panel-header>
-                  <mat-panel-title>
-                    Comments ({{post.comments.length}})
-                  </mat-panel-title>
-                  <mat-panel-description>
-                  </mat-panel-description>
-                </mat-expansion-panel-header>
-                <div *ngFor="let comment of post.comments" class="pt-3">
-                  <div class="text-gray-400">
-                    <small>{{ comment.name }}</small>
-                    &nbsp;
-                    <small>{{ comment.email }}</small>
-                  </div>
-                  <p class="">{{comment.body}}</p>
-                </div>
-              </mat-expansion-panel>
-            </mat-accordion>
-          </div>
-
-          <div *ngIf="!spinner && !post.comments.length && noCommentsMessage" class="w-full md:w-1/2 pt-4 md:pl-4">
-            <div
-              class="w-full h-[48px] flex justify-start items-center px-[24px] bg-[#424242] rounded-[4px] box_shadow">
-              {{noCommentsMessage}}
+          <div *ngIf="comments.length > 0" class="px-6">
+            <h4 class="">Comments ({{comments.length}})</h4>
+            <div *ngFor="let comment of comments" class="mt-6">
+              <small class="text-gray-300 break-all block mb-1">{{comment.name}} - {{comment.email}}</small>
+              <p>{{comment.body}}</p>
             </div>
           </div>
+
+          <div *ngIf="!spinner && !comments.length && noCommentsMessage" class="px-6">
+            <p>{{noCommentsMessage}}</p>
+          </div>
+
         </div>
 
       </div>
@@ -123,8 +119,10 @@
       <p>{{noPostsMessage}}</p>
     </div>
 
-    <div *ngIf="spinner" class="fixed top-0 left-0 z-[1] w-full h-screen flex justify-center items-center">
-      <mat-spinner></mat-spinner>
-    </div>
-
   </div>
+
+  <div *ngIf="spinner" class="fixed top-0 left-0 z-[1] w-full h-screen flex justify-center items-center">
+    <mat-spinner></mat-spinner>
+  </div>
+
+</div>
