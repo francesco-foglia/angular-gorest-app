@@ -21,7 +21,6 @@ export class UserComponent implements OnInit {
   comments: any[] = [];
   selectedPostId!: number;
   modalComments: boolean = false;
-  loaded: boolean = false;
 
   commentForm: FormGroup = new FormGroup({});
   newComment: any = {
@@ -66,20 +65,6 @@ export class UserComponent implements OnInit {
     this.apiService.get(`users/${this.userId}/posts`).subscribe({
       next: (response: HttpResponse<any>) => {
         this.posts = response.body;
-
-        this.posts.forEach((post: any) => {
-          post.comments = [];
-          this.apiService.get(`posts/${post.id}/comments`).subscribe({
-            next: (commentsData) => {
-              post.comments = commentsData.body;
-              this.loaded = true;
-            },
-            error: (error) => {
-              this.setMessage('Error getting comments', 3000, 'error');
-            }
-          });
-        });
-
         if (!this.posts.length) {
           this.noPostsMessage = 'There are no posts published by this user';
         }

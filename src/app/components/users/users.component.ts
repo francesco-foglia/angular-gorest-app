@@ -75,6 +75,10 @@ export class UsersComponent implements OnInit {
   clearName() {
     if (this.searchName !== '') {
       this.searchName = '';
+      this.currentPage = 1;
+      this.getUsers();
+    } else {
+      this.currentPage = 1;
       this.getUsers();
     }
   }
@@ -82,6 +86,10 @@ export class UsersComponent implements OnInit {
   clearEmail() {
     if (this.searchEmail !== '') {
       this.searchEmail = '';
+      this.currentPage = 1;
+      this.getUsers();
+    } else {
+      this.currentPage = 1;
       this.getUsers();
     }
   }
@@ -145,12 +153,8 @@ export class UsersComponent implements OnInit {
       error: (error) => {
         if (error.error[0].message === "has already been taken") {
           this.setMessage(`User Email ${error.error[0].message}`, 3000, 'error');
-          // this.clearName();
-          // this.clearEmail();
         } else {
           this.setMessage('Error adding user', 3000, 'error');
-          // this.clearName();
-          // this.clearEmail();
         }
       }
     });
