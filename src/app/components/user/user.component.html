@@ -5,7 +5,7 @@
   <h1>User</h1>
 
   <div *ngIf="confirmMessage || errorMessage"
-    class="fixed top-0 left-0 z-[1] w-full h-screen flex justify-center items-center">
+    class="fixed top-0 left-0 z-[3] w-full h-screen flex justify-center items-center">
     <mat-card>
       <mat-card-content [ngClass]="{'text-green-500': confirmMessage, 'text-red-500': errorMessage}">
         {{confirmMessage ? confirmMessage : errorMessage}}
@@ -98,14 +98,19 @@
           </div>
 
           <div *ngIf="comments.length > 0" class="px-6">
-            <div *ngFor="let comment of comments" class="mt-6">
-              <small class="text-gray-300 break-all block mb-1">{{comment.name}} - {{comment.email}}</small>
-              <p>{{comment.body}}</p>
+            <div *ngFor="let comment of comments" class="mt-7 flex justify-start items-start">
+              <div>
+                <mat-icon>person</mat-icon>&nbsp;
+              </div>
+              <div>
+                <div class="mb-1">
+                  <small class="bg-[#202124] break-all p-1 rounded">
+                    {{comment.name}} - {{comment.email}}
+                  </small>
+                </div>
+                <p>{{comment.body}}</p>
+              </div>
             </div>
-          </div>
-
-          <div *ngIf="!spinner && !comments.length && noCommentsMessage" class="px-6">
-            <p>{{noCommentsMessage}}</p>
           </div>
 
         </div>
@@ -120,7 +125,7 @@
 
   </div>
 
-  <div *ngIf="spinner" class="fixed top-0 left-0 z-[1] w-full h-screen flex justify-center items-center">
+  <div *ngIf="spinner" class="fixed top-0 left-0 z-[4] w-full h-screen flex justify-center items-center">
     <mat-spinner></mat-spinner>
   </div>
 

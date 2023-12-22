@@ -1,5 +1,49 @@
 <app-navbar></app-navbar>
 
-<div class="w-full h-[calc(100vh-60px)] mt-[60px] py-12 px-[5%]">
+<div class="w-full min-h-[calc(100vh-60px)] mt-[60px] pt-12 pb-10 px-[5%] relative">
+
   <h1>Posts</h1>
+
+  <div *ngIf="confirmMessage || errorMessage"
+    class="fixed top-0 left-0 z-[3] w-full h-screen flex justify-center items-center">
+    <mat-card>
+      <mat-card-content [ngClass]="{'text-green-500': confirmMessage, 'text-red-500': errorMessage}">
+        {{confirmMessage ? confirmMessage : errorMessage}}
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div *ngIf="posts.length > 0" class="my-10">
+    <p><span class="text-[#c2185b]">Page:</span> {{currentPage}} of {{pages}}</p>
+    <div class="mb-2"></div>
+    <p><span class="text-[#c2185b]">Results:</span> {{paginationResults()}}</p>
+  </div>
+
+  <div *ngIf="posts.length > 0" class="my-10">
+    <button (click)="previousPage()" mat-raised-button color="primary" [disabled]="currentPage === 1">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <span class="mr-4"></span>
+    <button (click)="nextPage()" mat-raised-button color="primary"
+      [disabled]="this.posts.length !== this.resultsPerPage ">
+      <mat-icon>arrow_forward</mat-icon>
+    </button>
+  </div>
+
+  <div *ngIf="posts.length > 0" class="mt-10">
+    <ul>
+      <li *ngFor="let post of posts">
+        <mat-divider></mat-divider>
+        <div class="pt-5 pb-2">
+          <h2>{{ post.title }}</h2>
+          <p>{{ post.body }}</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="spinner" class="fixed top-0 left-0 z-[4] w-full h-screen flex justify-center items-center">
+    <mat-spinner></mat-spinner>
+  </div>
+
 </div>
