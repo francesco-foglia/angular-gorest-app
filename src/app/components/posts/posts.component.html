@@ -9,7 +9,7 @@
   <div class="mt-10">
     <mat-form-field class="w-full min-w-[250px] max-w-[500px]">
       <mat-label>Search for the post by title</mat-label>
-      <input matInput (input)="searchTitle === '' ? clearTitle() : getPosts()" [(ngModel)]="searchTitle">
+      <input matInput (input)="searchPosts()" [(ngModel)]="searchTitle">
       <button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchTitle" (click)="clearTitle()">
         <small>&#x2715;</small>
       </button>
@@ -19,7 +19,7 @@
   <div class="mb-10">
     <mat-form-field class="w-full min-w-[250px] max-w-[500px]">
       <mat-label>Search for the post by text</mat-label>
-      <input matInput (input)="searchText === '' ? clearText() : getPosts()" [(ngModel)]="searchText">
+      <input matInput (input)="searchPosts()" [(ngModel)]="searchText">
       <button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchText" (click)="clearText()">
         <small>&#x2715;</small>
       </button>
