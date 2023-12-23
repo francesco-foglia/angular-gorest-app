@@ -52,7 +52,7 @@ export class UserComponent implements OnInit {
         this.user = response.body;
       },
       error: (error) => {
-        this.setMessage('Error getting user', 3000, 'error');
+        this.setMessage('Error getting user', 2500, 'error');
       },
       complete: () => {
         this.spinner = false;
@@ -70,7 +70,7 @@ export class UserComponent implements OnInit {
         }
       },
       error: (error) => {
-        this.setMessage('Error getting posts', 3000, 'error');
+        this.setMessage('Error getting posts', 2500, 'error');
       },
       complete: () => {
         this.spinner = false;
@@ -87,7 +87,7 @@ export class UserComponent implements OnInit {
         this.modalComments = true;
       },
       error: (error) => {
-        this.setMessage('Error getting comments', 3000, 'error');
+        this.setMessage('Error getting comments', 2500, 'error');
       },
       complete: () => {
         this.spinner = false;
@@ -112,14 +112,14 @@ export class UserComponent implements OnInit {
   addComment(postId: number, formDirective: any) {
     this.apiService.post(`posts/${postId}/comments`, this.commentForm.value).subscribe({
       next: (data: any) => {
-        this.setMessage('Comment added successfully', 3000, 'confirm');
+        this.setMessage('Comment added successfully', 2500, 'confirm');
         formDirective.resetForm();
         this.commentForm.reset();
         this.getUserPosts();
         this.getPostComments(postId);
       },
       error: (error) => {
-        this.setMessage('Error adding comment', 3000, 'error');
+        this.setMessage('Error adding comment', 2500, 'error');
       }
     });
   }

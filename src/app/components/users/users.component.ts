@@ -64,7 +64,7 @@ export class UsersComponent implements OnInit {
         this.users = response.body;
       },
       error: (error) => {
-        this.setMessage('Error getting users', 3000, 'error');
+        this.setMessage('Error getting users', 2500, 'error');
       },
       complete: () => {
         this.spinner = false;
@@ -99,12 +99,12 @@ export class UsersComponent implements OnInit {
       this.disabled = true;
       this.apiService.delete(`users/${userId}`).subscribe({
         next: (data: any) => {
-          this.setMessage('User deleted successfully', 3000, 'confirm');
+          this.setMessage('User deleted successfully', 2500, 'confirm');
           this.getUsers();
           this.disabled = false;
         },
         error: (error) => {
-          this.setMessage('Error deleting user', 3000, 'error');
+          this.setMessage('Error deleting user', 2500, 'error');
           this.disabled = false;
         }
       });
@@ -142,7 +142,7 @@ export class UsersComponent implements OnInit {
   addUser(formDirective: any) {
     this.apiService.post('users', this.userForm.value).subscribe({
       next: (data: any) => {
-        this.setMessage('User added successfully', 3000, 'confirm');
+        this.setMessage('User added successfully', 2500, 'confirm');
         this.clearName();
         this.clearEmail();
         formDirective.resetForm();
@@ -152,9 +152,9 @@ export class UsersComponent implements OnInit {
       },
       error: (error) => {
         if (error.error[0].message === "has already been taken") {
-          this.setMessage(`User Email ${error.error[0].message}`, 3000, 'error');
+          this.setMessage(`User Email ${error.error[0].message}`, 2500, 'error');
         } else {
-          this.setMessage('Error adding user', 3000, 'error');
+          this.setMessage('Error adding user', 2500, 'error');
         }
       }
     });
