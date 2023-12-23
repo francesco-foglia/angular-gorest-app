@@ -4,14 +4,7 @@
 
   <h1>Users</h1>
 
-  <div *ngIf="confirmMessage || errorMessage"
-    class="fixed top-0 left-0 z-[2] w-full h-screen flex justify-center items-center">
-    <mat-card>
-      <mat-card-content [ngClass]="{'text-green-500': confirmMessage, 'text-red-500': errorMessage}">
-        {{confirmMessage ? confirmMessage : errorMessage}}
-      </mat-card-content>
-    </mat-card>
-  </div>
+  <app-message [confirmMessage]="confirmMessage" [errorMessage]="errorMessage"></app-message>
 
   <div class="my-10">
     <small>Add User</small>
