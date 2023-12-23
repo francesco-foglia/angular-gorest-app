@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { MessageComponent } from './message.component';
 import { MessageRoutingModule } from './message-routing.module';
-import { MaterialModule } from '../../modules/material/material.module';
+import { MaterialModule } from '../../modules/material.module';
 
 @NgModule({
   declarations: [MessageComponent],

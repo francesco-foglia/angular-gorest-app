@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { SpinnerComponent } from './spinner.component';
 import { SpinnerRoutingModule } from './spinner-routing.module';
-import { MaterialModule } from '../../modules/material/material.module';
+import { MaterialModule } from '../../modules/material.module';
 
 @NgModule({
   declarations: [SpinnerComponent],
