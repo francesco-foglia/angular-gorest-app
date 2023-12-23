@@ -64,7 +64,7 @@ export class PostsComponent implements OnInit {
         this.modalComments = false;
       },
       error: (error) => {
-        this.setMessage('Error getting posts', 3000, 'error');
+        this.setMessage('Error getting posts', 2500, 'error');
       },
       complete: () => {
         this.spinner = false;
@@ -81,7 +81,7 @@ export class PostsComponent implements OnInit {
         this.modalComments = true;
       },
       error: (error) => {
-        this.setMessage('Error getting comments', 3000, 'error');
+        this.setMessage('Error getting comments', 2500, 'error');
       },
       complete: () => {
         this.spinner = false;
@@ -150,7 +150,7 @@ export class PostsComponent implements OnInit {
   addPost(postId: number, formDirective: any) {
     this.apiService.post(`users/${postId}/posts`, this.postForm.value).subscribe({
       next: (data: any) => {
-        this.setMessage('Post added successfully', 3000, 'confirm');
+        this.setMessage('Post added successfully', 2500, 'confirm');
         this.clearTitle();
         this.clearText();
         formDirective.resetForm();
@@ -159,7 +159,7 @@ export class PostsComponent implements OnInit {
         this.getPosts();
       },
       error: (error) => {
-        this.setMessage('Error adding post', 3000, 'error');
+        this.setMessage('Error adding post', 2500, 'error');
       }
     });
   }

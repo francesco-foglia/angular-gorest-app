@@ -10,6 +10,7 @@ import { AuthService } from '../../auth/auth.service';
 export class NavbarComponent implements OnInit {
 
   isLoggedIn: boolean = this.authService.isLoggedIn;
+  spinner: boolean = false;
 
   routes = [
     { path: '/users', title: 'Users' },
@@ -22,10 +23,14 @@ export class NavbarComponent implements OnInit {
   }
 
   logout(): void {
-    this.authService.isLoggedIn = false;
-    sessionStorage.removeItem('isLoggedIn');
-    sessionStorage.removeItem('token');
-    this.router.navigate(['/login']);
+    this.spinner = true;
+    setTimeout(() => {
+      this.authService.isLoggedIn = false;
+      sessionStorage.removeItem('isLoggedIn');
+      sessionStorage.removeItem('token');
+      this.router.navigate(['/login']);
+      this.spinner = false;
+    }, 500);
   }
 
 }
