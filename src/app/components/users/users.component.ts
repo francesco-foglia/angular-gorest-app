@@ -93,25 +93,22 @@ export class UsersComponent implements OnInit {
     });
   }
 
+  searchUsers() {
+    this.currentPage = 1;
+    this.getUsers();
+  }
+
   clearName() {
     if (this.searchName !== '') {
       this.searchName = '';
-      this.currentPage = 1;
-      this.getUsers();
-    } else {
-      this.currentPage = 1;
-      this.getUsers();
+      this.searchUsers();
     }
   }
 
   clearEmail() {
     if (this.searchEmail !== '') {
       this.searchEmail = '';
-      this.currentPage = 1;
-      this.getUsers();
-    } else {
-      this.currentPage = 1;
-      this.getUsers();
+      this.searchUsers();
     }
   }
 
