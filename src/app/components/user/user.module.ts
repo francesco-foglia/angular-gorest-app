@@ -5,6 +5,7 @@ import { UserComponent } from './user.component';
 import { UserRoutingModule } from './user-routing.module';
 import { MaterialModule } from '../../modules/material/material.module';
 import { NavbarModule } from '../navbar/navbar.module';
+import { MessageModule } from '../message/message.module';
 import { SpinnerModule } from '../spinner/spinner.module';
 
 
@@ -15,6 +16,7 @@ import { SpinnerModule } from '../spinner/spinner.module';
     UserRoutingModule,
     MaterialModule,
     NavbarModule,
+    MessageModule,
     SpinnerModule
   ]
 })
