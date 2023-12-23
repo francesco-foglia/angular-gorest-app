@@ -126,8 +126,6 @@
 
   </div>
 
-  <div *ngIf="spinner" class="fixed top-0 left-0 z-[3] w-full h-screen flex justify-center items-center">
-    <mat-spinner></mat-spinner>
-  </div>
+  <app-spinner [showSpinner]="spinner"></app-spinner>
 
 </div>
