@@ -95,20 +95,6 @@ export class UserComponent implements OnInit {
     });
   }
 
-  setMessage(message: string, duration: number, messageType: 'confirm' | 'error') {
-    if (messageType === 'confirm') {
-      this.confirmMessage = message;
-      setTimeout(() => {
-        this.confirmMessage = '';
-      }, duration);
-    } else if (messageType === 'error') {
-      this.errorMessage = message;
-      setTimeout(() => {
-        this.errorMessage = '';
-      }, duration);
-    }
-  }
-
   addComment(postId: number, formDirective: any) {
     this.apiService.post(`posts/${postId}/comments`, this.commentForm.value).subscribe({
       next: (data: any) => {
@@ -130,6 +116,20 @@ export class UserComponent implements OnInit {
       this.modalComments = false;
       this.spinner = false;
     }, 300);
+  }
+
+  setMessage(message: string, duration: number, messageType: 'confirm' | 'error') {
+    if (messageType === 'confirm') {
+      this.confirmMessage = message;
+      setTimeout(() => {
+        this.confirmMessage = '';
+      }, duration);
+    } else if (messageType === 'error') {
+      this.errorMessage = message;
+      setTimeout(() => {
+        this.errorMessage = '';
+      }, duration);
+    }
   }
 
 }
