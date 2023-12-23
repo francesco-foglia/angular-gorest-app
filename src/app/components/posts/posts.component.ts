@@ -89,18 +89,29 @@ export class PostsComponent implements OnInit {
     });
   }
 
-  setMessage(message: string, duration: number, messageType: 'confirm' | 'error') {
-    if (messageType === 'confirm') {
-      this.confirmMessage = message;
-      setTimeout(() => {
-        this.confirmMessage = '';
-      }, duration);
-    } else if (messageType === 'error') {
-      this.errorMessage = message;
-      setTimeout(() => {
-        this.errorMessage = '';
-      }, duration);
-    }
+  addPost(postId: number, formDirective: any) {
+    this.apiService.post(`users/${postId}/posts`, this.postForm.value).subscribe({
+      next: (data: any) => {
+        this.setMessage('Post added successfully', 2500, 'confirm');
+        this.clearTitle();
+        this.clearText();
+        formDirective.resetForm();
+        this.postForm.reset();
+        this.currentPage = 1;
+        this.getPosts();
+      },
+      error: (error) => {
+        this.setMessage('Error adding post', 2500, 'error');
+      }
+    });
+  }
+
+  closeComments() {
+    this.spinner = true;
+    setTimeout(() => {
+      this.modalComments = false;
+      this.spinner = false;
+    }, 300);
   }
 
   clearTitle() {
@@ -147,29 +158,18 @@ export class PostsComponent implements OnInit {
     return results;
   }
 
-  addPost(postId: number, formDirective: any) {
-    this.apiService.post(`users/${postId}/posts`, this.postForm.value).subscribe({
-      next: (data: any) => {
-        this.setMessage('Post added successfully', 2500, 'confirm');
-        this.clearTitle();
-        this.clearText();
-        formDirective.resetForm();
-        this.postForm.reset();
-        this.currentPage = 1;
-        this.getPosts();
-      },
-      error: (error) => {
-        this.setMessage('Error adding post', 2500, 'error');
-      }
-    });
-  }
-
-  closeComments() {
-    this.spinner = true;
-    setTimeout(() => {
-      this.modalComments = false;
-      this.spinner = false;
-    }, 300);
+  setMessage(message: string, duration: number, messageType: 'confirm' | 'error') {
+    if (messageType === 'confirm') {
+      this.confirmMessage = message;
+      setTimeout(() => {
+        this.confirmMessage = '';
+      }, duration);
+    } else if (messageType === 'error') {
+      this.errorMessage = message;
+      setTimeout(() => {
+        this.errorMessage = '';
+      }, duration);
+    }
   }
 
 }

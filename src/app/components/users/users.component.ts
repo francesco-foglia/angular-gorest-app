@@ -72,6 +72,27 @@ export class UsersComponent implements OnInit {
     });
   }
 
+  addUser(formDirective: any) {
+    this.apiService.post('users', this.userForm.value).subscribe({
+      next: (data: any) => {
+        this.setMessage('User added successfully', 2500, 'confirm');
+        this.clearName();
+        this.clearEmail();
+        formDirective.resetForm();
+        this.userForm.reset();
+        this.currentPage = 1;
+        this.getUsers();
+      },
+      error: (error) => {
+        if (error.error[0].message === "has already been taken") {
+          this.setMessage(`User Email ${error.error[0].message}`, 2500, 'error');
+        } else {
+          this.setMessage('Error adding user', 2500, 'error');
+        }
+      }
+    });
+  }
+
   clearName() {
     if (this.searchName !== '') {
       this.searchName = '';
@@ -111,20 +132,6 @@ export class UsersComponent implements OnInit {
     }
   }
 
-  setMessage(message: string, duration: number, messageType: 'confirm' | 'error') {
-    if (messageType === 'confirm') {
-      this.confirmMessage = message;
-      setTimeout(() => {
-        this.confirmMessage = '';
-      }, duration);
-    } else if (messageType === 'error') {
-      this.errorMessage = message;
-      setTimeout(() => {
-        this.errorMessage = '';
-      }, duration);
-    }
-  }
-
   previousPage() {
     if (this.currentPage > 1) {
       this.currentPage--;
@@ -139,33 +146,26 @@ export class UsersComponent implements OnInit {
     }
   }
 
-  addUser(formDirective: any) {
-    this.apiService.post('users', this.userForm.value).subscribe({
-      next: (data: any) => {
-        this.setMessage('User added successfully', 2500, 'confirm');
-        this.clearName();
-        this.clearEmail();
-        formDirective.resetForm();
-        this.userForm.reset();
-        this.currentPage = 1;
-        this.getUsers();
-      },
-      error: (error) => {
-        if (error.error[0].message === "has already been taken") {
-          this.setMessage(`User Email ${error.error[0].message}`, 2500, 'error');
-        } else {
-          this.setMessage('Error adding user', 2500, 'error');
-        }
-      }
-    });
-  }
-
   paginationResults() {
     const results = `
       ${this.currentPage === 1 ? 1 : (this.currentPage - 1) * this.resultsPerPage + 1} -
       ${this.currentPage !== this.pages ? this.currentPage * this.resultsPerPage : this.total} of ${this.total}
     `;
     return results;
+  }
+
+  setMessage(message: string, duration: number, messageType: 'confirm' | 'error') {
+    if (messageType === 'confirm') {
+      this.confirmMessage = message;
+      setTimeout(() => {
+        this.confirmMessage = '';
+      }, duration);
+    } else if (messageType === 'error') {
+      this.errorMessage = message;
+      setTimeout(() => {
+        this.errorMessage = '';
+      }, duration);
+    }
   }
 
 }
