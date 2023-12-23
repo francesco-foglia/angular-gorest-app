@@ -114,25 +114,22 @@ export class PostsComponent implements OnInit {
     }, 300);
   }
 
+  searchPosts() {
+    this.currentPage = 1;
+    this.getPosts();
+  }
+
   clearTitle() {
     if (this.searchTitle !== '') {
       this.searchTitle = '';
-      this.currentPage = 1;
-      this.getPosts();
-    } else {
-      this.currentPage = 1;
-      this.getPosts();
+      this.searchPosts();
     }
   }
 
   clearText() {
     if (this.searchText !== '') {
       this.searchText = '';
-      this.currentPage = 1;
-      this.getPosts();
-    } else {
-      this.currentPage = 1;
-      this.getPosts();
+      this.searchPosts();
     }
   }
 
