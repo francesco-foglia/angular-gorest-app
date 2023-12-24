@@ -15,6 +15,10 @@
     <p><span class="text-[#c2185b]">Results:</span> {{paginationResults()}}</p>
   </div>
 
+  <div *ngIf="posts.length === 0 && !spinner" class="my-10">
+    <p>No results found</p>
+  </div>
+
   <div *ngIf="posts.length > 0" class="my-10">
     <button (click)="previousPage()" mat-raised-button color="primary" [disabled]="currentPage === 1">
       <mat-icon>arrow_back</mat-icon>
