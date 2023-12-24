@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit {
   spinner: boolean = false;
   errorMessage: string = '';
 
-  constructor(private authService: AuthService, private router: Router, private formBuilder: FormBuilder, private apiService: ApiService) { }
+  constructor(public authService: AuthService, private router: Router, private formBuilder: FormBuilder, private apiService: ApiService) { }
 
   ngOnInit(): void {
     if (!this.authService.isLoggedIn) {
