@@ -46,25 +46,8 @@
     </form>
   </div>
 
-  <div class="mt-10">
-    <mat-form-field class="w-full min-w-[250px] max-w-[500px]">
-      <mat-label>Search for the user by name</mat-label>
-      <input matInput (input)="searchUsers()" [(ngModel)]="searchName">
-      <button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchName" (click)="clearName()">
-        <small>&#x2715;</small>
-      </button>
-    </mat-form-field>
-  </div>
-
-  <div class="mb-10">
-    <mat-form-field class="w-full min-w-[250px] max-w-[500px]">
-      <mat-label>Search for the user by email</mat-label>
-      <input matInput (input)="searchUsers()" [(ngModel)]="searchEmail">
-      <button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchEmail" (click)="clearEmail()">
-        <small>&#x2715;</small>
-      </button>
-    </mat-form-field>
-  </div>
+  <app-search label="Search for the user by name" (searchEvent)="searchUserName($event)"></app-search>
+  <app-search label="Search for the user by email" (searchEvent)="searchUserEmail($event)"></app-search>
 
   <div *ngIf="users.length > 0" class="my-10">
     <p><span class="text-[#c2185b]">Page:</span> {{currentPage}} of {{pages}}</p>

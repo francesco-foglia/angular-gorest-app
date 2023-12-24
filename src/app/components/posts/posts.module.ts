@@ -6,6 +6,7 @@ import { PostsRoutingModule } from './posts-routing.module';
 import { MaterialModule } from '../../modules/material.module';
 import { NavbarModule } from '../navbar/navbar.module';
 import { MessageModule } from '../message/message.module';
+import { SearchModule } from '../search/search.module';
 import { SpinnerModule } from '../spinner/spinner.module';
 
 
@@ -17,6 +18,7 @@ import { SpinnerModule } from '../spinner/spinner.module';
     MaterialModule,
     NavbarModule,
     MessageModule,
+    SearchModule,
     SpinnerModule
   ]
 })
