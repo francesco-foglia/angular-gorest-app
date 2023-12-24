@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ApiService {
-  private apiUrl = 'https://gorest.co.in/public/v2';
+  public apiUrl = 'https://gorest.co.in/public/v2';
 
   constructor(private http: HttpClient) { }
 
