@@ -93,8 +93,8 @@ export class PostsComponent implements OnInit {
     this.apiService.post(`users/${postId}/posts`, this.postForm.value).subscribe({
       next: (data: any) => {
         this.setMessage('Post added successfully', 2500, 'confirm');
-        this.clearTitle();
-        this.clearText();
+        this.searchTitle = '';
+        this.searchText = '';
         formDirective.resetForm();
         this.postForm.reset();
         this.currentPage = 1;
@@ -114,23 +114,16 @@ export class PostsComponent implements OnInit {
     }, 300);
   }
 
-  searchPosts() {
+  searchPostTitle(search: string) {
+    this.searchTitle = search;
     this.currentPage = 1;
     this.getPosts();
   }
 
-  clearTitle() {
-    if (this.searchTitle !== '') {
-      this.searchTitle = '';
-      this.searchPosts();
-    }
-  }
-
-  clearText() {
-    if (this.searchText !== '') {
-      this.searchText = '';
-      this.searchPosts();
-    }
+  searchPostText(search: string) {
+    this.searchText = search;
+    this.currentPage = 1;
+    this.getPosts();
   }
 
   previousPage() {

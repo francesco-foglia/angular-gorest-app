@@ -76,8 +76,8 @@ export class UsersComponent implements OnInit {
     this.apiService.post('users', this.userForm.value).subscribe({
       next: (data: any) => {
         this.setMessage('User added successfully', 2500, 'confirm');
-        this.clearName();
-        this.clearEmail();
+        this.searchName = '';
+        this.searchEmail = '';
         formDirective.resetForm();
         this.userForm.reset();
         this.currentPage = 1;
@@ -93,23 +93,16 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  searchUsers() {
+  searchUserName(search: string) {
+    this.searchName = search;
     this.currentPage = 1;
     this.getUsers();
   }
 
-  clearName() {
-    if (this.searchName !== '') {
-      this.searchName = '';
-      this.searchUsers();
-    }
-  }
-
-  clearEmail() {
-    if (this.searchEmail !== '') {
-      this.searchEmail = '';
-      this.searchUsers();
-    }
+  searchUserEmail(search: string) {
+    this.searchEmail = search;
+    this.currentPage = 1;
+    this.getUsers();
   }
 
   deleteUser(userId: number) {
