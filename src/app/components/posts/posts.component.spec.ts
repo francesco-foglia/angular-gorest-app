@@ -257,4 +257,20 @@ describe('PostsComponent', () => {
     }));
   });
 
+  it('should call ApiService.post method with correct parameters', fakeAsync(() => {
+    const postId = 91221;
+    const postData = {
+      body: "body",
+      id: 91221,
+      title: "title",
+      user_id: 5850744
+    };
+
+    component.addPost(postId, {} as any);
+    tick();
+
+    const expectedUrl = `users/${postId}/posts`;
+    expect(apiServiceSpy.post).toHaveBeenCalledWith(expectedUrl, postData);
+  }));
+
 });
