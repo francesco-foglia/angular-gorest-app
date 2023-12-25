@@ -84,22 +84,7 @@
             </mat-accordion>
           </div>
 
-          <h4 class="px-6">Comments ({{comments.length}})</h4>
-          <div *ngIf="comments.length > 0" class="px-6">
-            <div *ngFor="let comment of comments" class="mt-7 flex justify-start items-start">
-              <div>
-                <mat-icon>person</mat-icon>&nbsp;
-              </div>
-              <div>
-                <div class="mb-1">
-                  <small class="bg-[#202124] break-all p-1 rounded">
-                    {{comment.name}} - {{comment.email}}
-                  </small>
-                </div>
-                <p>{{comment.body}}</p>
-              </div>
-            </div>
-          </div>
+          <app-comments [comments]="comments"></app-comments>
 
         </div>
 

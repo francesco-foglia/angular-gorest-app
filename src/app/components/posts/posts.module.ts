@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { PostsComponent } from './posts.component';
 import { PostsRoutingModule } from './posts-routing.module';
 import { MaterialModule } from '../../modules/material.module';
+import { CommentsModule } from '../comments/comments.module';
 import { NavbarModule } from '../navbar/navbar.module';
 import { SearchModule } from '../search/search.module';
 import { SpinnerModule } from '../spinner/spinner.module';
@@ -15,6 +16,7 @@ import { SpinnerModule } from '../spinner/spinner.module';
     CommonModule,
     PostsRoutingModule,
     MaterialModule,
+    CommentsModule,
     NavbarModule,
     SearchModule,
     SpinnerModule
