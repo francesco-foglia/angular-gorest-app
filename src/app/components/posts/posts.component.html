@@ -8,8 +8,8 @@
   <app-search label="Search for the post by text" (searchEvent)="searchPostText($event)"></app-search>
 
   <app-pagination [elements]="posts" [spinner]="spinner" [currentPage]="currentPage" [pages]="pages"
-    [resultsPerPage]="resultsPerPage" [paginationResults]="paginationResults()"
-    (previousPageEvent)="previousPage($event)" (nextPageEvent)="nextPage($event)">
+    [resultsPerPage]="resultsPerPage" [total]="total" (previousPageEvent)="previousPage($event)"
+    (nextPageEvent)="nextPage($event)">
   </app-pagination>
 
   <div *ngIf="posts.length > 0" class="mt-10">

@@ -1,7 +1,7 @@
 <div *ngIf="elements.length > 0" class="my-10">
   <p><span class="text-[#c2185b]">Page:</span> {{currentPage}} of {{pages}}</p>
   <div class="mb-2"></div>
-  <p><span class="text-[#c2185b]">Results:</span> {{paginationResults}}</p>
+  <p><span class="text-[#c2185b]">Results:</span> {{paginationResults()}}</p>
 </div>
 
 <div *ngIf="elements.length === 0 && !spinner" class="my-10">
@@ -13,8 +13,7 @@
     <mat-icon>arrow_back</mat-icon>
   </button>
   <span class="mr-4"></span>
-  <button (click)="nextPage()" mat-raised-button color="primary"
-    [disabled]="this.elements.length !== this.resultsPerPage">
+  <button (click)="nextPage()" mat-raised-button color="primary" [disabled]="currentPage === pages">
     <mat-icon>arrow_forward</mat-icon>
   </button>
 </div>

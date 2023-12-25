@@ -48,8 +48,8 @@
   <app-search label="Search for the user by email" (searchEvent)="searchUserEmail($event)"></app-search>
 
   <app-pagination [elements]="users" [spinner]="spinner" [currentPage]="currentPage" [pages]="pages"
-    [resultsPerPage]="resultsPerPage" [paginationResults]="paginationResults()"
-    (previousPageEvent)="previousPage($event)" (nextPageEvent)="nextPage($event)">
+    [resultsPerPage]="resultsPerPage" [total]="total" (previousPageEvent)="previousPage($event)"
+    (nextPageEvent)="nextPage($event)">
   </app-pagination>
 
   <div *ngIf="users.length > 0" class="mt-10">
