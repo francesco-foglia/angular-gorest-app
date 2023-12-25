@@ -121,14 +121,16 @@ export class UsersComponent implements OnInit {
     }
   }
 
-  previousPage() {
+  previousPage(currentPage: number) {
+    this.currentPage = currentPage;
     if (this.currentPage > 1) {
       this.currentPage--;
       this.getUsers();
     }
   }
 
-  nextPage() {
+  nextPage(currentPage: number) {
+    this.currentPage = currentPage;
     if (this.users.length === this.resultsPerPage) {
       this.currentPage++;
       this.getUsers();
