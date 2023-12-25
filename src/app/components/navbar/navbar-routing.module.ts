@@ -5,11 +5,11 @@ import { AuthGuard } from '../../auth/auth.guard';
 const navbarRoutes: Routes = [
   {
     path: 'users',
-    loadChildren: () => import('../users/users.module').then(m => m.UsersModule), canActivate: [AuthGuard]
+    loadChildren: () => import('../../modules/users/users.module').then(m => m.UsersModule), canActivate: [AuthGuard]
   },
   {
     path: 'posts',
-    loadChildren: () => import('../posts/posts.module').then(m => m.PostsModule), canActivate: [AuthGuard]
+    loadChildren: () => import('../../modules/posts/posts.module').then(m => m.PostsModule), canActivate: [AuthGuard]
   },
 ];
 
