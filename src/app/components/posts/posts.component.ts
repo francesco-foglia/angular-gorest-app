@@ -127,26 +127,12 @@ export class PostsComponent implements OnInit {
 
   previousPage(currentPage: number) {
     this.currentPage = currentPage;
-    if (this.currentPage > 1) {
-      this.currentPage--;
-      this.getPosts();
-    }
+    this.getPosts();
   }
 
   nextPage(currentPage: number) {
     this.currentPage = currentPage;
-    if (this.posts.length === this.resultsPerPage) {
-      this.currentPage++;
-      this.getPosts();
-    }
-  }
-
-  paginationResults() {
-    const results = `
-      ${this.currentPage === 1 ? 1 : (this.currentPage - 1) * this.resultsPerPage + 1} -
-      ${this.currentPage !== this.pages ? this.currentPage * this.resultsPerPage : this.total} of ${this.total}
-    `;
-    return results;
+    this.getPosts();
   }
 
 }

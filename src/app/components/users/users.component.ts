@@ -123,26 +123,12 @@ export class UsersComponent implements OnInit {
 
   previousPage(currentPage: number) {
     this.currentPage = currentPage;
-    if (this.currentPage > 1) {
-      this.currentPage--;
-      this.getUsers();
-    }
+    this.getUsers();
   }
 
   nextPage(currentPage: number) {
     this.currentPage = currentPage;
-    if (this.users.length === this.resultsPerPage) {
-      this.currentPage++;
-      this.getUsers();
-    }
-  }
-
-  paginationResults() {
-    const results = `
-      ${this.currentPage === 1 ? 1 : (this.currentPage - 1) * this.resultsPerPage + 1} -
-      ${this.currentPage !== this.pages ? this.currentPage * this.resultsPerPage : this.total} of ${this.total}
-    `;
-    return results;
+    this.getUsers();
   }
 
 }
