@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { UsersComponent } from './users.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { ApiService } from '../../services/api.service';
 import { HttpResponse } from '@angular/common/http';
 
@@ -231,5 +231,64 @@ describe('UsersComponent', () => {
 
     expect(result).toEqual('0 of 0');
   });
+
+  it('should handle error in getUsers', fakeAsync(() => {
+    const errorResponse = { error: 'Internal Server Error' };
+    apiService.get.and.returnValue(throwError(() => errorResponse));
+
+    spyOn(component, 'setMessage');
+    component.getUsers();
+    tick();
+
+    expect(component.spinner).toBe(false);
+    expect(component.setMessage).toHaveBeenCalledWith('Error getting users', 2500, 'error');
+  }));
+
+  it('should handle successful user deletion', fakeAsync(() => {
+    const userId = 1;
+    spyOn(window, 'confirm').and.returnValue(true);
+    const getUsersSpy = spyOn(component, 'getUsers').and.stub();
+    apiService.delete.and.returnValue(of({}));
+
+    component.deleteUser(userId);
+    tick();
+
+    expect(apiService.delete).toHaveBeenCalledWith(`users/${userId}`);
+    expect(getUsersSpy).toHaveBeenCalled();
+    expect(component.setMessage).toHaveBeenCalledWith('User deleted successfully', 2500, 'confirm');
+    expect(component.disabled).toBe(false);
+  }));
+
+  it('should handle error in user deletion', fakeAsync(() => {
+    const userId = 1;
+    spyOn(window, 'confirm').and.returnValue(true);
+    const getUsersSpy = spyOn(component, 'getUsers').and.stub();
+    const errorResponse = { error: 'Internal Server Error' };
+    apiService.delete.and.returnValue(throwError(errorResponse));
+
+    component.deleteUser(userId);
+    tick();
+
+    expect(apiService.delete).toHaveBeenCalledWith(`users/${userId}`);
+    expect(getUsersSpy).not.toHaveBeenCalled(); // No getUsers call on error
+    expect(component.setMessage).toHaveBeenCalledWith('Error deleting user', 2500, 'error');
+    expect(component.disabled).toBe(false);
+  }));
+
+  it('should call ApiService.post method with correct parameters', fakeAsync(() => {
+    const userData = {
+      email: "name@email.com",
+      gender: "male",
+      id: 5852012,
+      name: "name",
+      status: "active"
+    };
+
+    component.addUser({} as any);
+    tick();
+
+    const expectedUrl = `users`;
+    expect(apiService.post).toHaveBeenCalledWith(expectedUrl, userData);
+  }));
 
 });
