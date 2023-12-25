@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms'
 import { HttpResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-user',
@@ -29,7 +30,7 @@ export class UserComponent implements OnInit {
     email: '',
   };
 
-  constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private apiService: ApiService) { }
+  constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private apiService: ApiService, private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
@@ -52,7 +53,7 @@ export class UserComponent implements OnInit {
         this.user = response.body;
       },
       error: (error) => {
-        this.setMessage('Error getting user', 2500, 'error');
+        this._snackBar.open('Error getting user', '❌');
       },
       complete: () => {
         this.spinner = false;
@@ -70,7 +71,7 @@ export class UserComponent implements OnInit {
         }
       },
       error: (error) => {
-        this.setMessage('Error getting posts', 2500, 'error');
+        this._snackBar.open('Error getting posts', '❌');
       },
       complete: () => {
         this.spinner = false;
@@ -87,7 +88,7 @@ export class UserComponent implements OnInit {
         this.modalComments = true;
       },
       error: (error) => {
-        this.setMessage('Error getting comments', 2500, 'error');
+        this._snackBar.open('Error getting comments', '❌');
       },
       complete: () => {
         this.spinner = false;
@@ -98,14 +99,14 @@ export class UserComponent implements OnInit {
   addComment(postId: number, formDirective: any) {
     this.apiService.post(`posts/${postId}/comments`, this.commentForm.value).subscribe({
       next: (data: any) => {
-        this.setMessage('Comment added successfully', 2500, 'confirm');
+        this._snackBar.open('Comment added successfully', '❌');
         formDirective.resetForm();
         this.commentForm.reset();
         this.getUserPosts();
         this.getPostComments(postId);
       },
       error: (error) => {
-        this.setMessage('Error adding comment', 2500, 'error');
+        this._snackBar.open('Error adding comment', '❌');
       }
     });
   }
@@ -116,20 +117,6 @@ export class UserComponent implements OnInit {
       this.modalComments = false;
       this.spinner = false;
     }, 300);
-  }
-
-  setMessage(message: string, duration: number, messageType: 'confirm' | 'error') {
-    if (messageType === 'confirm') {
-      this.confirmMessage = message;
-      setTimeout(() => {
-        this.confirmMessage = '';
-      }, duration);
-    } else if (messageType === 'error') {
-      this.errorMessage = message;
-      setTimeout(() => {
-        this.errorMessage = '';
-      }, duration);
-    }
   }
 
 }

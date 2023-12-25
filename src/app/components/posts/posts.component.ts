@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { HttpResponse } from '@angular/common/http';
 import { ApiService } from '../../services/api.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-posts',
@@ -35,7 +36,7 @@ export class PostsComponent implements OnInit {
   selectedPostId!: number;
   modalComments: boolean = false;
 
-  constructor(private formBuilder: FormBuilder, private apiService: ApiService) { }
+  constructor(private formBuilder: FormBuilder, private apiService: ApiService, private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.getPosts();
@@ -64,7 +65,7 @@ export class PostsComponent implements OnInit {
         this.modalComments = false;
       },
       error: (error) => {
-        this.setMessage('Error getting posts', 2500, 'error');
+        this._snackBar.open('Error getting posts', '❌');
       },
       complete: () => {
         this.spinner = false;
@@ -81,7 +82,7 @@ export class PostsComponent implements OnInit {
         this.modalComments = true;
       },
       error: (error) => {
-        this.setMessage('Error getting comments', 2500, 'error');
+        this._snackBar.open('Error getting comments', '❌');
       },
       complete: () => {
         this.spinner = false;
@@ -92,7 +93,7 @@ export class PostsComponent implements OnInit {
   addPost(postId: number, formDirective: any) {
     this.apiService.post(`users/${postId}/posts`, this.postForm.value).subscribe({
       next: (data: any) => {
-        this.setMessage('Post added successfully', 2500, 'confirm');
+        this._snackBar.open('Post added successfully', '❌');
         this.searchTitle = '';
         this.searchText = '';
         formDirective.resetForm();
@@ -101,7 +102,7 @@ export class PostsComponent implements OnInit {
         this.getPosts();
       },
       error: (error) => {
-        this.setMessage('Error adding post', 2500, 'error');
+        this._snackBar.open('Error adding post', '❌');
       }
     });
   }
@@ -146,20 +147,6 @@ export class PostsComponent implements OnInit {
       ${this.currentPage !== this.pages ? this.currentPage * this.resultsPerPage : this.total} of ${this.total}
     `;
     return results;
-  }
-
-  setMessage(message: string, duration: number, messageType: 'confirm' | 'error') {
-    if (messageType === 'confirm') {
-      this.confirmMessage = message;
-      setTimeout(() => {
-        this.confirmMessage = '';
-      }, duration);
-    } else if (messageType === 'error') {
-      this.errorMessage = message;
-      setTimeout(() => {
-        this.errorMessage = '';
-      }, duration);
-    }
   }
 
 }
