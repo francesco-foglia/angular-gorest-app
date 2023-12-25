@@ -125,14 +125,16 @@ export class PostsComponent implements OnInit {
     this.getPosts();
   }
 
-  previousPage() {
+  previousPage(currentPage: number) {
+    this.currentPage = currentPage;
     if (this.currentPage > 1) {
       this.currentPage--;
       this.getPosts();
     }
   }
 
-  nextPage() {
+  nextPage(currentPage: number) {
+    this.currentPage = currentPage;
     if (this.posts.length === this.resultsPerPage) {
       this.currentPage++;
       this.getPosts();

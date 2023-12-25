@@ -47,26 +47,10 @@
   <app-search label="Search for the user by name" (searchEvent)="searchUserName($event)"></app-search>
   <app-search label="Search for the user by email" (searchEvent)="searchUserEmail($event)"></app-search>
 
-  <div *ngIf="users.length > 0" class="my-10">
-    <p><span class="text-[#c2185b]">Page:</span> {{currentPage}} of {{pages}}</p>
-    <div class="mb-2"></div>
-    <p><span class="text-[#c2185b]">Results:</span> {{paginationResults()}}</p>
-  </div>
-
-  <div *ngIf="users.length === 0 && !spinner" class="my-10">
-    <p>No results found</p>
-  </div>
-
-  <div *ngIf="users.length > 0" class="my-10">
-    <button (click)="previousPage()" mat-raised-button color="primary" [disabled]="currentPage === 1">
-      <mat-icon>arrow_back</mat-icon>
-    </button>
-    <span class="mr-4"></span>
-    <button (click)="nextPage()" mat-raised-button color="primary"
-      [disabled]="this.users.length !== this.resultsPerPage">
-      <mat-icon>arrow_forward</mat-icon>
-    </button>
-  </div>
+  <app-pagination [elements]="users" [spinner]="spinner" [currentPage]="currentPage" [pages]="pages"
+    [resultsPerPage]="resultsPerPage" [paginationResults]="paginationResults()"
+    (previousPageEvent)="previousPage($event)" (nextPageEvent)="nextPage($event)">
+  </app-pagination>
 
   <div *ngIf="users.length > 0" class="mt-10">
     <ul>
