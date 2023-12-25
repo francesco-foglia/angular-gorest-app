@@ -12,8 +12,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class UserComponent implements OnInit {
 
-  confirmMessage: string = '';
-  errorMessage: string = '';
   noPostsMessage: string = '';
   spinner: boolean = false;
   userId: string = '';

@@ -16,8 +16,6 @@ export class PostsComponent implements OnInit {
   currentPage: number = 1;
   resultsPerPage: number = 20;
   spinner: boolean = false;
-  confirmMessage: string = '';
-  errorMessage: string = '';
 
   postForm: FormGroup = new FormGroup({});
   newPost: any = {

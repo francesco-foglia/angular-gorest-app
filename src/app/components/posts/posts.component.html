@@ -4,8 +4,6 @@
 
   <h1>Posts</h1>
 
-  <app-message [confirmMessage]="confirmMessage" [errorMessage]="errorMessage"></app-message>
-
   <app-search label="Search for the post by title" (searchEvent)="searchPostTitle($event)"></app-search>
   <app-search label="Search for the post by text" (searchEvent)="searchPostText($event)"></app-search>
 
