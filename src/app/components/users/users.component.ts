@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { HttpResponse } from '@angular/common/http';
 import { ApiService } from '../../services/api.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-users',
@@ -34,7 +35,7 @@ export class UsersComponent implements OnInit {
   searchEmail: string = '';
   disabled: boolean = false;
 
-  constructor(private formBuilder: FormBuilder, private apiService: ApiService) { }
+  constructor(private formBuilder: FormBuilder, private apiService: ApiService, private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.getUsers();
@@ -64,7 +65,7 @@ export class UsersComponent implements OnInit {
         this.users = response.body;
       },
       error: (error) => {
-        this.setMessage('Error getting users', 2500, 'error');
+        this._snackBar.open('Error getting users', '❌');
       },
       complete: () => {
         this.spinner = false;
@@ -75,7 +76,7 @@ export class UsersComponent implements OnInit {
   addUser(formDirective: any) {
     this.apiService.post('users', this.userForm.value).subscribe({
       next: (data: any) => {
-        this.setMessage('User added successfully', 2500, 'confirm');
+        this._snackBar.open('User added successfully', '❌');
         this.searchName = '';
         this.searchEmail = '';
         formDirective.resetForm();
@@ -85,9 +86,9 @@ export class UsersComponent implements OnInit {
       },
       error: (error) => {
         if (error.error[0].message === "has already been taken") {
-          this.setMessage(`User Email ${error.error[0].message}`, 2500, 'error');
+          this._snackBar.open(`User Email ${error.error[0].message}`, '❌');
         } else {
-          this.setMessage('Error adding user', 2500, 'error');
+          this._snackBar.open('Error adding user', '❌');
         }
       }
     });
@@ -110,12 +111,12 @@ export class UsersComponent implements OnInit {
       this.disabled = true;
       this.apiService.delete(`users/${userId}`).subscribe({
         next: (data: any) => {
-          this.setMessage('User deleted successfully', 2500, 'confirm');
+          this._snackBar.open('User deleted successfully', '❌');
           this.getUsers();
           this.disabled = false;
         },
         error: (error) => {
-          this.setMessage('Error deleting user', 2500, 'error');
+          this._snackBar.open('Error deleting user', '❌');
           this.disabled = false;
         }
       });
@@ -142,20 +143,6 @@ export class UsersComponent implements OnInit {
       ${this.currentPage !== this.pages ? this.currentPage * this.resultsPerPage : this.total} of ${this.total}
     `;
     return results;
-  }
-
-  setMessage(message: string, duration: number, messageType: 'confirm' | 'error') {
-    if (messageType === 'confirm') {
-      this.confirmMessage = message;
-      setTimeout(() => {
-        this.confirmMessage = '';
-      }, duration);
-    } else if (messageType === 'error') {
-      this.errorMessage = message;
-      setTimeout(() => {
-        this.errorMessage = '';
-      }, duration);
-    }
   }
 
 }

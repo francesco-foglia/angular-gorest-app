@@ -37,3 +37,12 @@ textarea {
   min-height: 100px;
   resize: none !important;
 }
+
+.mat-snack-bar-container {
+  background: #424242;
+  color: white;
+}
+
+.mat-snack-bar-container .mat-button-wrapper {
+  font-size: 12px;
+}
