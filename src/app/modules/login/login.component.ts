@@ -57,8 +57,6 @@ export class LoginComponent implements OnInit {
           this.errorMessage = 'An error occurred while logging in';
         }
         sessionStorage.removeItem('token');
-      },
-      complete: () => {
         this.spinner = false;
       }
     });
