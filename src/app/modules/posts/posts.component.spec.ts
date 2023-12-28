@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { PostsComponent } from './posts.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiService } from '../../services/api.service';
@@ -13,7 +13,7 @@ describe('PostsComponent', () => {
   let snackBarSpy: jasmine.SpyObj<MatSnackBar>;
 
   beforeEach(async () => {
-    apiServiceSpy = jasmine.createSpyObj('ApiService', ['get']);
+    apiServiceSpy = jasmine.createSpyObj('ApiService', ['get', 'post']);
     snackBarSpy = jasmine.createSpyObj('MatSnackBar', ['open']);
 
     await TestBed.configureTestingModule({
@@ -111,6 +111,39 @@ describe('PostsComponent', () => {
     component.nextPage(currentPage);
     expect(component.currentPage).toEqual(currentPage);
     expect(component.getPosts).toHaveBeenCalled();
+  });
+
+  it('should handle error when getting posts', () => {
+    const errorResponse = { status: 500, statusText: 'Internal Server Error' };
+    apiServiceSpy.get.and.returnValue(throwError(() => errorResponse));
+    component.getPosts();
+    expect(apiServiceSpy.get).toHaveBeenCalledWith(jasmine.any(String));
+    expect(snackBarSpy.open).toHaveBeenCalledWith('Error getting posts', '❌');
+  });
+
+  it('should handle error when getting comments', fakeAsync(() => {
+    const postId = 12345;
+    const errorResponse = { status: 500, statusText: 'Internal Server Error' };
+    apiServiceSpy.get.and.returnValue(throwError(() => errorResponse));
+    component.getPostComments(postId);
+    tick();
+    expect(apiServiceSpy.get).toHaveBeenCalledWith(`posts/${postId}/comments`);
+    expect(snackBarSpy.open).toHaveBeenCalledWith('Error getting comments', '❌');
+  }));
+
+  it('should add a post successfully', () => {
+    apiServiceSpy.post.and.returnValue(of({}));
+    const postId = 12345;
+    component.addPost(postId);
+    expect(snackBarSpy.open).toHaveBeenCalledWith('Post added successfully', '❌');
+  });
+
+  it('should handle generic error when adding post', () => {
+    const errorResponse = { error: [{ message: 'some other error' }] };
+    apiServiceSpy.post.and.returnValue(throwError(() => errorResponse));
+    const postId = 12345;
+    component.addPost(postId);
+    expect(snackBarSpy.open).toHaveBeenCalledWith('Error adding post', '❌');
   });
 
 });

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testin
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { HttpResponse } from '@angular/common/http';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserComponent } from './user.component';
 import { ApiService } from 'src/app/services/api.service';
@@ -14,7 +14,7 @@ describe('UserComponent', () => {
   let snackBarSpy: jasmine.SpyObj<MatSnackBar>;
 
   beforeEach(() => {
-    apiServiceSpy = jasmine.createSpyObj('ApiService', ['get']);
+    apiServiceSpy = jasmine.createSpyObj('ApiService', ['get', 'post']);
     snackBarSpy = jasmine.createSpyObj('MatSnackBar', ['open']);
 
     TestBed.configureTestingModule({
@@ -72,6 +72,46 @@ describe('UserComponent', () => {
   it('should activate spinner immediately when closeComments is called', () => {
     component.closeComments();
     expect(component.spinner).toBeTruthy();
+  });
+
+  it('should handle error when calling getUser', fakeAsync(() => {
+    const errorResponse = { error: 'Error getting user' };
+    apiServiceSpy.get.and.returnValue(throwError(() => errorResponse));
+    component.getUser();
+    tick();
+    expect(snackBarSpy.open).toHaveBeenCalledWith('Error getting user', '❌');
+  }));
+
+  it('should handle error when calling getUserPosts', fakeAsync(() => {
+    const errorResponse = { error: 'Error getting posts' };
+    apiServiceSpy.get.and.returnValue(throwError(() => errorResponse));
+    component.getUserPosts();
+    tick();
+    expect(snackBarSpy.open).toHaveBeenCalledWith('Error getting posts', '❌');
+  }));
+
+  it('should handle error when calling getPostComments', fakeAsync(() => {
+    const errorResponse = { error: 'Error getting comments' };
+    apiServiceSpy.get.and.returnValue(throwError(() => errorResponse));
+    const post_id = 12345;
+    component.getPostComments(post_id);
+    tick();
+    expect(snackBarSpy.open).toHaveBeenCalledWith('Error getting comments', '❌');
+  }));
+
+  it('should add a comment successfully', () => {
+    apiServiceSpy.post.and.returnValue(of({}));
+    const post_id = 12345;
+    component.addComment(post_id);
+    expect(snackBarSpy.open).toHaveBeenCalledWith('Comment added successfully', '❌');
+  });
+
+  it('should handle generic error when adding comment', () => {
+    const errorResponse = { error: [{ message: 'some other error' }] };
+    apiServiceSpy.post.and.returnValue(throwError(() => errorResponse));
+    const post_id = 12345;
+    component.addComment(post_id);
+    expect(snackBarSpy.open).toHaveBeenCalledWith('Error adding comment', '❌');
   });
 
 });

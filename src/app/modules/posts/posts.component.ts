@@ -47,33 +47,39 @@ export class PostsComponent implements OnInit {
 
   getPosts() {
     this.spinner = true;
-    this.apiService.get(`posts?title=${this.searchTitle}&body=${this.searchText}&page=${this.currentPage}&per_page=${this.resultsPerPage}`).subscribe({
-      next: (response: HttpResponse<any>) => {
 
-        const headers = response.headers;
+    const observable = this.apiService.get(`posts?title=${this.searchTitle}&body=${this.searchText}&page=${this.currentPage}&per_page=${this.resultsPerPage}`);
 
-        this.total = +headers.get('X-Pagination-Total')!;
-        this.pages = +headers.get('X-Pagination-Pages')!;
-        this.page = +headers.get('X-Pagination-Page')!;
-        this.limit = +headers.get('X-Pagination-Limit')!;
+    if (observable) {
+      observable.subscribe({
+        next: (response: HttpResponse<any>) => {
 
-        this.pages = Math.ceil(this.total / this.resultsPerPage);
+          const headers = response.headers;
 
-        this.posts = response.body;
-        this.modalComments = false;
-      },
-      error: (error) => {
-        this._snackBar.open('Error getting posts', '❌');
-      },
-      complete: () => {
-        this.spinner = false;
-      }
-    });
+          this.total = +headers.get('X-Pagination-Total')!;
+          this.pages = +headers.get('X-Pagination-Pages')!;
+          this.page = +headers.get('X-Pagination-Page')!;
+          this.limit = +headers.get('X-Pagination-Limit')!;
+
+          this.pages = Math.ceil(this.total / this.resultsPerPage);
+
+          this.posts = response.body;
+          this.modalComments = false;
+        },
+        error: (error) => {
+          this._snackBar.open('Error getting posts', '❌');
+        },
+        complete: () => {
+          this.spinner = false;
+        }
+      });
+    }
   }
 
   getPostComments(postId: number,) {
     this.spinner = true;
     this.selectedPostId = postId;
+
     this.apiService.get(`posts/${postId}/comments`).subscribe({
       next: (response: HttpResponse<any>) => {
         this.comments = response.body;
@@ -88,13 +94,12 @@ export class PostsComponent implements OnInit {
     });
   }
 
-  addPost(postId: number, formDirective: any) {
+  addPost(postId: number) {
     this.apiService.post(`users/${postId}/posts`, this.postForm.value).subscribe({
       next: (data: any) => {
         this._snackBar.open('Post added successfully', '❌');
         this.searchTitle = '';
         this.searchText = '';
-        formDirective.resetForm();
         this.postForm.reset();
         this.currentPage = 1;
         this.getPosts();

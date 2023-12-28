@@ -48,36 +48,40 @@ export class UsersComponent implements OnInit {
 
   getUsers() {
     this.spinner = true;
-    this.apiService.get(`users?name=${this.searchName}&email=${this.searchEmail}&page=${this.currentPage}&per_page=${this.resultsPerPage}`).subscribe({
-      next: (response: HttpResponse<any>) => {
 
-        const headers = response.headers;
+    const observable = this.apiService.get(`users?name=${this.searchName}&email=${this.searchEmail}&page=${this.currentPage}&per_page=${this.resultsPerPage}`);
 
-        this.total = +headers.get('X-Pagination-Total')!;
-        this.pages = +headers.get('X-Pagination-Pages')!;
-        this.page = +headers.get('X-Pagination-Page')!;
-        this.limit = +headers.get('X-Pagination-Limit')!;
+    if (observable) {
+      this.apiService.get(`users?name=${this.searchName}&email=${this.searchEmail}&page=${this.currentPage}&per_page=${this.resultsPerPage}`).subscribe({
+        next: (response: HttpResponse<any>) => {
 
-        this.pages = Math.ceil(this.total / this.resultsPerPage);
+          const headers = response.headers;
 
-        this.users = response.body;
-      },
-      error: (error) => {
-        this._snackBar.open('Error getting users', '❌');
-      },
-      complete: () => {
-        this.spinner = false;
-      }
-    });
+          this.total = +headers.get('X-Pagination-Total')!;
+          this.pages = +headers.get('X-Pagination-Pages')!;
+          this.page = +headers.get('X-Pagination-Page')!;
+          this.limit = +headers.get('X-Pagination-Limit')!;
+
+          this.pages = Math.ceil(this.total / this.resultsPerPage);
+
+          this.users = response.body;
+        },
+        error: (error) => {
+          this._snackBar.open('Error getting users', '❌');
+        },
+        complete: () => {
+          this.spinner = false;
+        }
+      });
+    }
   }
 
-  addUser(formDirective: any) {
+  addUser() {
     this.apiService.post('users', this.userForm.value).subscribe({
       next: (data: any) => {
         this._snackBar.open('User added successfully', '❌');
         this.searchName = '';
         this.searchEmail = '';
-        formDirective.resetForm();
         this.userForm.reset();
         this.currentPage = 1;
         this.getUsers();

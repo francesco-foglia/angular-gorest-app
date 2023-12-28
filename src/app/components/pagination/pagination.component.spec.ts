@@ -55,4 +55,12 @@ describe('PaginationComponent', () => {
     expect(component.paginationResults()).toBe('1 - 20 of 40');
   });
 
+  it('should show results pagination when currentPage is equal to pages', () => {
+    component.currentPage = 2;
+    component.pages = 2;
+    component.resultsPerPage = 20;
+    component.total = 40;
+    expect(component.paginationResults()).toBe('21 - 40 of 40');
+  });
+
 });

@@ -32,7 +32,7 @@ export class UserComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
-      this.userId = params.get('id') || '';
+      this.userId = params.get('id') as string;
       this.getUser();
       this.getUserPosts();
     });
@@ -61,44 +61,53 @@ export class UserComponent implements OnInit {
 
   getUserPosts() {
     this.spinner = true;
-    this.apiService.get(`users/${this.userId}/posts`).subscribe({
-      next: (response: HttpResponse<any>) => {
-        this.posts = response.body;
-        if (!this.posts.length) {
-          this.noPostsMessage = 'There are no posts published by this user';
+
+    const observable = this.apiService.get(`users/${this.userId}/posts`);
+
+    if (observable) {
+      observable.subscribe({
+        next: (response: HttpResponse<any>) => {
+          this.posts = response.body;
+          if (!this.posts.length) {
+            this.noPostsMessage = 'There are no posts published by this user';
+          }
+        },
+        error: (error) => {
+          this._snackBar.open('Error getting posts', '❌');
+        },
+        complete: () => {
+          this.spinner = false;
         }
-      },
-      error: (error) => {
-        this._snackBar.open('Error getting posts', '❌');
-      },
-      complete: () => {
-        this.spinner = false;
-      }
-    });
+      });
+    }
   }
 
   getPostComments(postId: number,) {
     this.spinner = true;
     this.selectedPostId = postId;
-    this.apiService.get(`posts/${postId}/comments`).subscribe({
-      next: (response: HttpResponse<any>) => {
-        this.comments = response.body;
-        this.modalComments = true;
-      },
-      error: (error) => {
-        this._snackBar.open('Error getting comments', '❌');
-      },
-      complete: () => {
-        this.spinner = false;
-      }
-    });
+
+    const observable = this.apiService.get(`posts/${postId}/comments`);
+
+    if (observable) {
+      observable.subscribe({
+        next: (response: HttpResponse<any>) => {
+          this.comments = response.body;
+          this.modalComments = true;
+        },
+        error: (error) => {
+          this._snackBar.open('Error getting comments', '❌');
+        },
+        complete: () => {
+          this.spinner = false;
+        }
+      });
+    }
   }
 
-  addComment(postId: number, formDirective: any) {
+  addComment(postId: number) {
     this.apiService.post(`posts/${postId}/comments`, this.commentForm.value).subscribe({
       next: (data: any) => {
         this._snackBar.open('Comment added successfully', '❌');
-        formDirective.resetForm();
         this.commentForm.reset();
         this.getUserPosts();
         this.getPostComments(postId);
