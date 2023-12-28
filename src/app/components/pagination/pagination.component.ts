@@ -25,17 +25,14 @@ export class PaginationComponent implements OnInit {
   }
 
   nextPage() {
-    if (this.elements.length === this.resultsPerPage) {
+    if (this.currentPage !== this.pages) {
       this.currentPage++;
     }
     this.nextPageEvent.emit(this.currentPage);
   }
 
   paginationResults() {
-    const results = `
-      ${this.currentPage === 1 ? 1 : (this.currentPage - 1) * this.resultsPerPage + 1} -
-      ${this.currentPage !== this.pages ? this.currentPage * this.resultsPerPage : this.total} of ${this.total}
-    `;
+    const results = `${this.currentPage === 1 ? 1 : (this.currentPage - 1) * this.resultsPerPage + 1} - ${this.currentPage !== this.pages ? this.currentPage * this.resultsPerPage : this.total} of ${this.total}`;
     return results;
   }
 
