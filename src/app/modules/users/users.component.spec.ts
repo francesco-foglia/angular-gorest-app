@@ -1,7 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UsersComponent } from './users.component';
 import { ApiService } from '../../services/api.service';
@@ -13,7 +13,7 @@ describe('UsersComponent', () => {
   let snackBarSpy: jasmine.SpyObj<MatSnackBar>;
 
   beforeEach(async () => {
-    apiServiceSpy = jasmine.createSpyObj('ApiService', ['get']);
+    apiServiceSpy = jasmine.createSpyObj('ApiService', ['get', 'post', 'delete']);
     snackBarSpy = jasmine.createSpyObj('MatSnackBar', ['open']);
 
     await TestBed.configureTestingModule({
@@ -80,6 +80,66 @@ describe('UsersComponent', () => {
     component.nextPage(currentPage);
     expect(component.currentPage).toEqual(currentPage);
     expect(component.getUsers).toHaveBeenCalled();
+  });
+
+  it('should call getUsers after adding a user successfully', () => {
+    apiServiceSpy.post.and.returnValue(of({}));
+    component.addUser();
+    const mockHttpResponse: HttpResponse<any> = new HttpResponse({
+      body: [],
+      status: 200,
+      headers: new HttpHeaders(),
+    });
+    apiServiceSpy.get.and.returnValue(of(mockHttpResponse));
+    expect(apiServiceSpy.get).toHaveBeenCalled();
+  });
+
+  it('should add a user successfully', () => {
+    apiServiceSpy.post.and.returnValue(of({}));
+    component.addUser();
+    expect(snackBarSpy.open).toHaveBeenCalledWith('User added successfully', '❌');
+  });
+
+  it('should handle error when adding user', () => {
+    const errorResponse = { error: [{ message: 'has already been taken' }] };
+    apiServiceSpy.post.and.returnValue(throwError(() => errorResponse));
+    component.addUser();
+    expect(snackBarSpy.open).toHaveBeenCalledWith(`User Email ${errorResponse.error[0].message}`, '❌');
+  });
+
+  it('should handle generic error when adding user', () => {
+    const errorResponse = { error: [{ message: 'some other error' }] };
+    apiServiceSpy.post.and.returnValue(throwError(() => errorResponse));
+    component.addUser();
+    expect(snackBarSpy.open).toHaveBeenCalledWith('Error adding user', '❌');
+  });
+
+  it('should handle error when calling getUsers', fakeAsync(() => {
+    const errorResponse = { error: 'Error getting users' };
+    apiServiceSpy.get.and.returnValue(throwError(() => errorResponse));
+    component.getUsers();
+    tick();
+    expect(snackBarSpy.open).toHaveBeenCalledWith('Error getting users', '❌');
+  }));
+
+  it('should delete a user successfully', () => {
+    apiServiceSpy.delete.and.returnValue(of({}));
+    spyOn(window, 'confirm').and.returnValue(true);
+    const userId = 1234567;
+    component.deleteUser(userId);
+    expect(window.confirm).toHaveBeenCalledWith('Are you sure you want to delete this user?');
+    expect(snackBarSpy.open).toHaveBeenCalledWith('User deleted successfully', '❌');
+  });
+
+  it('should handle delete user error', () => {
+    const errorResponse = { status: 500, message: 'Internal Server Error' };
+    apiServiceSpy.delete.and.returnValue(throwError(() => errorResponse));
+    spyOn(window, 'confirm').and.returnValue(true);
+    const userId = 1234567;
+    component.deleteUser(userId);
+    expect(window.confirm).toHaveBeenCalledWith('Are you sure you want to delete this user?');
+    expect(snackBarSpy.open).toHaveBeenCalledWith('Error deleting user', '❌');
+    expect(component.disabled).toBe(false);
   });
 
 });

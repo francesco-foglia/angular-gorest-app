@@ -79,7 +79,7 @@
                     </mat-form-field>
                   </div>
                   <button type="submit" mat-raised-button color="primary" [disabled]="!commentForm.valid"
-                    (click)="addComment(post.id, formDirective)">
+                    (click)="addComment(post.id); formDirective.resetForm();">
                     <mat-icon>add</mat-icon>
                   </button>
                 </form>

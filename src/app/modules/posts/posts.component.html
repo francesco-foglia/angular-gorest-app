@@ -59,7 +59,7 @@
                   </div>
 
                   <button type="submit" mat-raised-button color="primary" [disabled]="!postForm.valid"
-                    (click)="addPost(post.user_id, formDirective)">
+                    (click)="addPost(post.user_id); formDirective.resetForm();">
                     <mat-icon>add</mat-icon>
                   </button>
                 </form>
