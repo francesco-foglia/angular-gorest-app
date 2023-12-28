@@ -28,7 +28,7 @@ export class UserComponent implements OnInit {
     email: '',
   };
 
-  constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private apiService: ApiService, private _snackBar: MatSnackBar) { }
+  constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private apiService: ApiService, public _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {

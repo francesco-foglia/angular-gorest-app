@@ -33,7 +33,7 @@ export class UsersComponent implements OnInit {
   searchEmail: string = '';
   disabled: boolean = false;
 
-  constructor(private formBuilder: FormBuilder, private apiService: ApiService, private _snackBar: MatSnackBar) { }
+  constructor(private formBuilder: FormBuilder, public apiService: ApiService, public _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.getUsers();
