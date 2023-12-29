@@ -4,16 +4,15 @@
 
   <h1>Users</h1>
 
-  <div class="my-10">
+  <div class="my-10 max-w-[1000px]">
     <small>Add User</small>
     <form [formGroup]="userForm" #formDirective="ngForm">
-
-      <mat-form-field class="min-w-[250px]">
+      <mat-form-field class="w-full max-w-[250px]">
         <mat-label>Name</mat-label>
         <input matInput value="" type="text" formControlName="name">
       </mat-form-field>
 
-      <mat-form-field class="min-w-[250px]">
+      <mat-form-field class="w-full max-w-[250px]">
         <mat-label>Email</mat-label>
         <input matInput value="" type="email" formControlName="email">
       </mat-form-field>
@@ -44,13 +43,20 @@
     </form>
   </div>
 
-  <app-search label="Search for the user by name" (searchEvent)="searchUserName($event)"></app-search>
-  <app-search label="Search for the user by email" (searchEvent)="searchUserEmail($event)"></app-search>
+  <div class="flex flex-wrap justify-start items-start">
+    <div class="w-full lg:w-1/2 max-w-[580px] py-4 pr-8">
+      <app-search label="Search for the user by name" (searchEvent)="searchUserName($event)"></app-search>
+      <app-search label="Search for the user by email" (searchEvent)="searchUserEmail($event)"></app-search>
+    </div>
 
-  <app-pagination [elements]="users" [spinner]="spinner" [currentPage]="currentPage" [pages]="pages"
-    [resultsPerPage]="resultsPerPage" [total]="total" (previousPageEvent)="previousPage($event)"
-    (nextPageEvent)="nextPage($event)">
-  </app-pagination>
+    <div class="w-full lg:w-1/2 max-w-[580px] py-4">
+      <app-pagination [elements]="users" [spinner]="spinner" [currentPage]="currentPage" [pages]="pages"
+        [resultsPerPage]="resultsPerPage" [total]="total" (previousPageEvent)="previousPage($event)"
+        (nextPageEvent)="nextPage($event)" (firstPageEvent)="firstPage($event)" (lastPageEvent)="lastPage($event)"
+        (resultsPerPageEvent)="setResultsPerPage($event)">
+      </app-pagination>
+    </div>
+  </div>
 
   <div *ngIf="users.length > 0" class="mt-10">
     <ul>
