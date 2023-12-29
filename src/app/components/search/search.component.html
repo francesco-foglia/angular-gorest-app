@@ -1,5 +1,5 @@
 <div>
-  <mat-form-field class="w-full min-w-[250px] max-w-[500px]">
+  <mat-form-field class="w-full max-w-[500px]">
     <mat-label>{{label}}</mat-label>
     <input matInput (input)="onSearch()" [(ngModel)]="searchValue">
     <button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchValue" (click)="onClear()">

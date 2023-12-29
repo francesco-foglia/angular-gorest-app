@@ -12,7 +12,7 @@ export class SearchComponent implements OnInit {
   @Output() searchEvent = new EventEmitter<string>();
 
   onSearch() {
-    this.searchEvent.emit(this.searchValue);
+    this.searchEvent.emit(this.searchValue.trim());
   }
 
   onClear() {
