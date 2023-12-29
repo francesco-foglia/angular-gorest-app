@@ -48,6 +48,34 @@ describe('PaginationComponent', () => {
     expect(component.previousPageEvent.emit).toHaveBeenCalledWith(1);
   });
 
+  it('should set currentPage on firstPage', () => {
+    component.currentPage = 10;
+    component.firstPage();
+    expect(component.currentPage).toBe(1);
+  });
+
+  it('should emit firstPageEvent on firstPage', () => {
+    component.currentPage = 10;
+    spyOn(component.firstPageEvent, 'emit');
+    component.firstPage();
+    expect(component.firstPageEvent.emit).toHaveBeenCalledWith(1);
+  });
+
+  it('should set currentPage on lastPage', () => {
+    component.currentPage = 1;
+    component.pages = 100;
+    component.lastPage();
+    expect(component.currentPage).toBe(100);
+  });
+
+  it('should emit lastPageEvent on lastPage', () => {
+    component.currentPage = 1;
+    component.pages = 100;
+    spyOn(component.lastPageEvent, 'emit');
+    component.lastPage();
+    expect(component.lastPageEvent.emit).toHaveBeenCalledWith(100);
+  });
+
   it('should show results pagination', () => {
     component.currentPage = 1;
     component.resultsPerPage = 20;
@@ -61,6 +89,29 @@ describe('PaginationComponent', () => {
     component.resultsPerPage = 20;
     component.total = 40;
     expect(component.paginationResults()).toBe('21 - 40 of 40');
+  });
+
+  it('should emit resultsPerPageEvent with selected value when setResultsPerPage is called', () => {
+    spyOn(component.resultsPerPageEvent, 'emit');
+    const event = {
+      target: {
+        innerHTML: '5',
+      },
+    };
+    component.setResultsPerPage(event);
+    expect(component.resultsPerPage).toEqual(5);
+    expect(component.resultsPerPageEvent.emit).toHaveBeenCalledWith(5);
+  });
+
+  it('should not emit resultsPerPageEvent if event target innerHTML is not a number', () => {
+    spyOn(component.resultsPerPageEvent, 'emit');
+    const event = {
+      target: {
+        innerHTML: 'abc',
+      },
+    };
+    component.setResultsPerPage(event);
+    expect(component.resultsPerPageEvent.emit).not.toHaveBeenCalled();
   });
 
 });

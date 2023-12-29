@@ -16,6 +16,9 @@ export class PaginationComponent implements OnInit {
 
   @Output() previousPageEvent = new EventEmitter<number>();
   @Output() nextPageEvent = new EventEmitter<number>();
+  @Output() firstPageEvent = new EventEmitter<number>();
+  @Output() lastPageEvent = new EventEmitter<number>();
+  @Output() resultsPerPageEvent = new EventEmitter<number>();
 
   previousPage() {
     if (this.currentPage > 1) {
@@ -29,6 +32,24 @@ export class PaginationComponent implements OnInit {
       this.currentPage++;
     }
     this.nextPageEvent.emit(this.currentPage);
+  }
+
+  firstPage() {
+    this.currentPage = 1;
+    this.firstPageEvent.emit(this.currentPage);
+  }
+
+  lastPage() {
+    this.currentPage = this.pages;
+    this.lastPageEvent.emit(this.currentPage);
+  }
+
+  setResultsPerPage(event: any) {
+    if (!isNaN(parseInt(event.target.innerHTML))) {
+      const selectedValue = parseInt(event.target.innerHTML);
+      this.resultsPerPage = selectedValue;
+      this.resultsPerPageEvent.emit(this.resultsPerPage);
+    }
   }
 
   paginationResults() {
