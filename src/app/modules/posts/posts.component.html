@@ -4,13 +4,20 @@
 
   <h1>Posts</h1>
 
-  <app-search label="Search for the post by title" (searchEvent)="searchPostTitle($event)"></app-search>
-  <app-search label="Search for the post by text" (searchEvent)="searchPostText($event)"></app-search>
+  <div class="flex flex-wrap justify-start items-start">
+    <div class="w-full lg:w-1/2 max-w-[580px] py-4 pr-8">
+      <app-search label="Search for the post by title" (searchEvent)="searchPostTitle($event)"></app-search>
+      <app-search label="Search for the post by text" (searchEvent)="searchPostText($event)"></app-search>
+    </div>
 
-  <app-pagination [elements]="posts" [spinner]="spinner" [currentPage]="currentPage" [pages]="pages"
-    [resultsPerPage]="resultsPerPage" [total]="total" (previousPageEvent)="previousPage($event)"
-    (nextPageEvent)="nextPage($event)">
-  </app-pagination>
+    <div class="w-full lg:w-1/2 max-w-[580px] py-4">
+      <app-pagination [elements]="posts" [spinner]="spinner" [currentPage]="currentPage" [pages]="pages"
+        [resultsPerPage]="resultsPerPage" [total]="total" (previousPageEvent)="previousPage($event)"
+        (nextPageEvent)="nextPage($event)" (firstPageEvent)="firstPage($event)" (lastPageEvent)="lastPage($event)"
+        (resultsPerPageEvent)="setResultsPerPage($event)">
+      </app-pagination>
+    </div>
+  </div>
 
   <div *ngIf="posts.length > 0" class="mt-10">
     <ul>
@@ -46,7 +53,7 @@
                 </mat-expansion-panel-header>
 
                 <form [formGroup]="postForm" #formDirective="ngForm">
-                  <mat-form-field class="min-w-[500px]">
+                  <mat-form-field class="w-full max-w-[500px]">
                     <mat-label>Title</mat-label>
                     <input matInput value="" type="text" formControlName="title">
                   </mat-form-field>
@@ -60,6 +67,44 @@
 
                   <button type="submit" mat-raised-button color="primary" [disabled]="!postForm.valid"
                     (click)="addPost(post.user_id); formDirective.resetForm();">
+                    <mat-icon>add</mat-icon>
+                  </button>
+                </form>
+
+              </mat-expansion-panel>
+            </mat-accordion>
+
+            <mat-divider></mat-divider>
+
+            <mat-accordion>
+              <mat-expansion-panel hideToggle>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <span class="pt-0.5">Add Comment</span>
+                  </mat-panel-title>
+                  <mat-panel-description>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <form [formGroup]="commentForm" #formDirective="ngForm">
+                  <mat-form-field class="w-full max-w-[250px]">
+                    <mat-label>Name</mat-label>
+                    <input matInput value="" type="text" formControlName="name">
+                  </mat-form-field>
+
+                  <mat-form-field class="w-full max-w-[250px]">
+                    <mat-label>Email</mat-label>
+                    <input matInput value="" type="email" formControlName="email">
+                  </mat-form-field>
+
+                  <div>
+                    <mat-form-field class="w-full max-w-[500px]">
+                      <mat-label>Comment</mat-label>
+                      <textarea matInput type="text" formControlName="body"></textarea>
+                    </mat-form-field>
+                  </div>
+                  <button type="submit" mat-raised-button color="primary" [disabled]="!commentForm.valid"
+                    (click)="addComment(post.id); formDirective.resetForm();">
                     <mat-icon>add</mat-icon>
                   </button>
                 </form>

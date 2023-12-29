@@ -113,6 +113,30 @@ describe('PostsComponent', () => {
     expect(component.getPosts).toHaveBeenCalled();
   });
 
+  it('should call firstPage and update properties', () => {
+    spyOn(component, 'getPosts');
+    const currentPage = 1;
+    component.firstPage(currentPage);
+    expect(component.currentPage).toEqual(currentPage);
+    expect(component.getPosts).toHaveBeenCalled();
+  });
+
+  it('should call lastPage and update properties', () => {
+    spyOn(component, 'getPosts');
+    const currentPage = 100;
+    component.lastPage(currentPage);
+    expect(component.currentPage).toEqual(currentPage);
+    expect(component.getPosts).toHaveBeenCalled();
+  });
+
+  it('should call setResultsPerPage and update properties', () => {
+    spyOn(component, 'getPosts');
+    const resultsPerPage = 20;
+    component.setResultsPerPage(resultsPerPage);
+    expect(component.resultsPerPage).toEqual(resultsPerPage);
+    expect(component.getPosts).toHaveBeenCalled();
+  });
+
   it('should handle error when getting posts', () => {
     const errorResponse = { status: 500, statusText: 'Internal Server Error' };
     apiServiceSpy.get.and.returnValue(throwError(() => errorResponse));
@@ -144,6 +168,21 @@ describe('PostsComponent', () => {
     const postId = 12345;
     component.addPost(postId);
     expect(snackBarSpy.open).toHaveBeenCalledWith('Error adding post', '❌');
+  });
+
+  it('should add a comment successfully', () => {
+    apiServiceSpy.post.and.returnValue(of({}));
+    const post_id = 12345;
+    component.addComment(post_id);
+    expect(snackBarSpy.open).toHaveBeenCalledWith('Comment added successfully', '❌');
+  });
+
+  it('should handle generic error when adding comment', () => {
+    const errorResponse = { error: [{ message: 'some other error' }] };
+    apiServiceSpy.post.and.returnValue(throwError(() => errorResponse));
+    const post_id = 12345;
+    component.addComment(post_id);
+    expect(snackBarSpy.open).toHaveBeenCalledWith('Error adding comment', '❌');
   });
 
 });

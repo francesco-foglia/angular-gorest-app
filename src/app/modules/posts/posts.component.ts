@@ -23,6 +23,13 @@ export class PostsComponent implements OnInit {
     body: '',
   };
 
+  commentForm: FormGroup = new FormGroup({});
+  newComment: any = {
+    body: '',
+    name: '',
+    email: '',
+  };
+
   total: number = 0;
   pages: number = 0;
   page: number = 0;
@@ -42,6 +49,12 @@ export class PostsComponent implements OnInit {
     this.postForm = this.formBuilder.group({
       title: ['', Validators.required],
       body: ['', Validators.required],
+    });
+
+    this.commentForm = this.formBuilder.group({
+      body: ['', Validators.required],
+      name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
     });
   }
 
@@ -80,18 +93,23 @@ export class PostsComponent implements OnInit {
     this.spinner = true;
     this.selectedPostId = postId;
 
-    this.apiService.get(`posts/${postId}/comments`).subscribe({
-      next: (response: HttpResponse<any>) => {
-        this.comments = response.body;
-        this.modalComments = true;
-      },
-      error: (error) => {
-        this._snackBar.open('Error getting comments', '❌');
-      },
-      complete: () => {
-        this.spinner = false;
-      }
-    });
+    const observable = this.apiService.get(`posts/${postId}/comments`);
+
+    if (observable) {
+
+      this.apiService.get(`posts/${postId}/comments`).subscribe({
+        next: (response: HttpResponse<any>) => {
+          this.comments = response.body;
+          this.modalComments = true;
+        },
+        error: (error) => {
+          this._snackBar.open('Error getting comments', '❌');
+        },
+        complete: () => {
+          this.spinner = false;
+        }
+      });
+    }
   }
 
   addPost(postId: number) {
@@ -106,6 +124,20 @@ export class PostsComponent implements OnInit {
       },
       error: (error) => {
         this._snackBar.open('Error adding post', '❌');
+      }
+    });
+  }
+
+  addComment(postId: number) {
+    this.apiService.post(`posts/${postId}/comments`, this.commentForm.value).subscribe({
+      next: (data: any) => {
+        this._snackBar.open('Comment added successfully', '❌');
+        this.commentForm.reset();
+        this.getPosts();
+        this.getPostComments(postId);
+      },
+      error: (error) => {
+        this._snackBar.open('Error adding comment', '❌');
       }
     });
   }
@@ -137,6 +169,22 @@ export class PostsComponent implements OnInit {
 
   nextPage(currentPage: number) {
     this.currentPage = currentPage;
+    this.getPosts();
+  }
+
+  firstPage(currentPage: number) {
+    this.currentPage = currentPage;
+    this.getPosts();
+  }
+
+  lastPage(currentPage: number) {
+    this.currentPage = currentPage;
+    this.getPosts();
+  }
+
+  setResultsPerPage(resultsPerPage: any) {
+    this.currentPage = 1;
+    this.resultsPerPage = resultsPerPage;
     this.getPosts();
   }
 
