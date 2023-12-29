@@ -114,4 +114,19 @@ describe('UserComponent', () => {
     expect(snackBarSpy.open).toHaveBeenCalledWith('Error adding comment', '❌');
   });
 
+  it('should add a post successfully', () => {
+    apiServiceSpy.post.and.returnValue(of({}));
+    const postId = 12345;
+    component.addPost(postId);
+    expect(snackBarSpy.open).toHaveBeenCalledWith('Post added successfully', '❌');
+  });
+
+  it('should handle generic error when adding post', () => {
+    const errorResponse = { error: [{ message: 'some other error' }] };
+    apiServiceSpy.post.and.returnValue(throwError(() => errorResponse));
+    const postId = 12345;
+    component.addPost(postId);
+    expect(snackBarSpy.open).toHaveBeenCalledWith('Error adding post', '❌');
+  });
+
 });

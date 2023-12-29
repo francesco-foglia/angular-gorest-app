@@ -6,32 +6,65 @@
 
   <div *ngIf="user.id" class="mt-10 mb-9">
 
-    <p class="flex justify-start items-start">
-      <span class="text-[#c2185b] break-all mr-1">ID: &nbsp;</span>
-      <span class="break-all">{{user.id}}</span>
-    </p>
-    <p class="flex justify-start items-start">
-      <span class="text-[#c2185b] break-all mr-1">Name: &nbsp;</span>
-      <span class="break-all">{{user.name}}</span>
-    </p>
-    <p class="flex justify-start items-start">
-      <span class="text-[#c2185b] break-all mr-1">Email: &nbsp;</span>
-      <span class="break-all">{{user.email}}</span>
-    </p>
-    <p class="flex justify-start items-start">
-      <span class="text-[#c2185b] break-all mr-1">Gender: &nbsp;</span>
-      <span class="break-all">{{user.gender}}</span>
-    </p>
-    <p class="flex justify-start items-start">
-      <span class="text-[#c2185b] break-all mr-1">Status: &nbsp;</span>
-      <span class="break-all">{{user.status}}</span>
-    </p>
+    <div class="flex flex-wrap justify-center items-start">
+      <div class="w-full lg:w-1/2 my-3">
+        <p class="flex justify-start items-start">
+          <span class="text-[#c2185b] break-all mr-1">ID: &nbsp;</span>
+          <span class="break-all">{{user.id}}</span>
+        </p>
+        <p class="flex justify-start items-start">
+          <span class="text-[#c2185b] break-all mr-1">Name: &nbsp;</span>
+          <span class="break-all">{{user.name}}</span>
+        </p>
+        <p class="flex justify-start items-start">
+          <span class="text-[#c2185b] break-all mr-1">Email: &nbsp;</span>
+          <span class="break-all">{{user.email}}</span>
+        </p>
+        <p class="flex justify-start items-start">
+          <span class="text-[#c2185b] break-all mr-1">Gender: &nbsp;</span>
+          <span class="break-all">{{user.gender}}</span>
+        </p>
+        <p class="flex justify-start items-start">
+          <span class="text-[#c2185b] break-all mr-1">Status: &nbsp;</span>
+          <span class="break-all">{{user.status}}</span>
+        </p>
+      </div>
+
+      <div class="w-full lg:w-1/2 my-3">
+        <small>Add Post</small>
+        <form [formGroup]="postForm" #formDirective="ngForm">
+          <mat-form-field class="w-full max-w-[500px]">
+            <mat-label>Title</mat-label>
+            <input matInput value="" type="text" formControlName="title">
+          </mat-form-field>
+
+          <div>
+            <mat-form-field class="w-full max-w-[500px]">
+              <mat-label>Text</mat-label>
+              <textarea matInput type="text" formControlName="body"></textarea>
+            </mat-form-field>
+          </div>
+
+          <button type="submit" mat-raised-button color="primary" [disabled]="!postForm.valid"
+            (click)="addPost(user.id); formDirective.resetForm();">
+            <mat-icon>add</mat-icon>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div *ngIf="!spinner && !posts.length && noPostsMessage" class="mt-10">
+      <p>{{noPostsMessage}}</p>
+    </div>
 
     <div *ngIf="posts.length > 0" class="mt-10">
 
       <h2>Posts <span>({{posts.length}})</span></h2>
 
       <div class="my-6" *ngFor="let post of posts">
+
+
+
         <mat-divider></mat-divider>
 
         <article class="my-6">
@@ -94,10 +127,6 @@
 
       </div>
 
-    </div>
-
-    <div *ngIf="!spinner && !posts.length && noPostsMessage" class="mt-10">
-      <p>{{noPostsMessage}}</p>
     </div>
 
   </div>
