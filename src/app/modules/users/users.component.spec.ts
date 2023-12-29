@@ -82,6 +82,30 @@ describe('UsersComponent', () => {
     expect(component.getUsers).toHaveBeenCalled();
   });
 
+  it('should call firstPage and update properties', () => {
+    spyOn(component, 'getUsers');
+    const currentPage = 1;
+    component.firstPage(currentPage);
+    expect(component.currentPage).toEqual(currentPage);
+    expect(component.getUsers).toHaveBeenCalled();
+  });
+
+  it('should call lastPage and update properties', () => {
+    spyOn(component, 'getUsers');
+    const currentPage = 100;
+    component.lastPage(currentPage);
+    expect(component.currentPage).toEqual(currentPage);
+    expect(component.getUsers).toHaveBeenCalled();
+  });
+
+  it('should call setResultsPerPage and update properties', () => {
+    spyOn(component, 'getUsers');
+    const resultsPerPage = 20;
+    component.setResultsPerPage(resultsPerPage);
+    expect(component.resultsPerPage).toEqual(resultsPerPage);
+    expect(component.getUsers).toHaveBeenCalled();
+  });
+
   it('should call getUsers after adding a user successfully', () => {
     apiServiceSpy.post.and.returnValue(of({}));
     component.addUser();

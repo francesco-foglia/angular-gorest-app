@@ -114,6 +114,7 @@ export class UsersComponent implements OnInit {
       this.apiService.delete(`users/${userId}`).subscribe({
         next: (data: any) => {
           this._snackBar.open('User deleted successfully', '❌');
+          this.currentPage = 1;
           this.getUsers();
           this.disabled = false;
         },
@@ -132,6 +133,22 @@ export class UsersComponent implements OnInit {
 
   nextPage(currentPage: number) {
     this.currentPage = currentPage;
+    this.getUsers();
+  }
+
+  firstPage(currentPage: number) {
+    this.currentPage = currentPage;
+    this.getUsers();
+  }
+
+  lastPage(currentPage: number) {
+    this.currentPage = currentPage;
+    this.getUsers();
+  }
+
+  setResultsPerPage(resultsPerPage: any) {
+    this.currentPage = 1;
+    this.resultsPerPage = resultsPerPage;
     this.getUsers();
   }
 
