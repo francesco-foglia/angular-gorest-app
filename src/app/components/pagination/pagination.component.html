@@ -1,19 +1,44 @@
-<div *ngIf="elements.length > 0" class="my-10">
-  <p><span class="text-[#c2185b]">Page:</span> {{currentPage}} of {{pages}}</p>
-  <div class="mb-2"></div>
-  <p><span class="text-[#c2185b]">Results:</span> {{paginationResults()}}</p>
+<div *ngIf="elements.length > 0" class="flex flex-col sm:flex-row justify-start items-start">
+  <div class="mr-8 mb-4">
+    <mat-form-field>
+      <mat-label>Items per page:</mat-label>
+      <mat-select>
+        <mat-option></mat-option>
+        <mat-option *ngFor="let value of [20, 40, 60, 80, 100]" value={{value}}
+          (click)="setResultsPerPage($event)">{{value}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="mr-4 mb-4">
+    <p><span class="text-[#c2185b]">Page:</span> {{currentPage}} of {{pages}}</p>
+    <div class="mb-2"></div>
+    <p><span class="text-[#c2185b]">Results:</span> {{paginationResults()}}</p>
+  </div>
 </div>
 
-<div *ngIf="elements.length === 0 && !spinner" class="my-10">
+<div *ngIf="elements.length === 0 && !spinner" class="mt-5">
   <p>No results found</p>
 </div>
 
-<div *ngIf="elements.length > 0" class="my-10">
-  <button (click)="previousPage()" mat-raised-button color="primary" [disabled]="currentPage === 1">
-    <mat-icon>arrow_back</mat-icon>
-  </button>
-  <span class="mr-4"></span>
-  <button (click)="nextPage()" mat-raised-button color="primary" [disabled]="currentPage === pages">
-    <mat-icon>arrow_forward</mat-icon>
-  </button>
+<div *ngIf="elements.length > 0" class="flex flex-wrap justify-start items-start">
+  <div class="w-[180px] mr-8 mb-4">
+    <button (click)="firstPage()" mat-raised-button [disabled]="currentPage === 1">
+      <mat-icon>first_page</mat-icon>
+    </button>
+    <span class="mr-4"></span>
+    <button (click)="lastPage()" mat-raised-button [disabled]="currentPage === pages">
+      <mat-icon>last_page</mat-icon>
+    </button>
+  </div>
+
+  <div class="mr-4 mb-4">
+    <button (click)="previousPage()" mat-raised-button color="primary" [disabled]="currentPage === 1">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <span class="mr-4"></span>
+    <button (click)="nextPage()" mat-raised-button color="primary" [disabled]="currentPage === pages">
+      <mat-icon>arrow_forward</mat-icon>
+    </button>
+  </div>
 </div>
