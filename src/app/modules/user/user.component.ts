@@ -21,6 +21,12 @@ export class UserComponent implements OnInit {
   selectedPostId!: number;
   modalComments: boolean = false;
 
+  postForm: FormGroup = new FormGroup({});
+  newPost: any = {
+    title: '',
+    body: '',
+  };
+
   commentForm: FormGroup = new FormGroup({});
   newComment: any = {
     body: '',
@@ -35,6 +41,11 @@ export class UserComponent implements OnInit {
       this.userId = params.get('id') as string;
       this.getUser();
       this.getUserPosts();
+    });
+
+    this.postForm = this.formBuilder.group({
+      title: ['', Validators.required],
+      body: ['', Validators.required],
     });
 
     this.commentForm = this.formBuilder.group({
@@ -102,6 +113,19 @@ export class UserComponent implements OnInit {
         }
       });
     }
+  }
+
+  addPost(postId: number) {
+    this.apiService.post(`users/${postId}/posts`, this.postForm.value).subscribe({
+      next: (data: any) => {
+        this._snackBar.open('Post added successfully', '❌');
+        this.postForm.reset();
+        this.getUserPosts();
+      },
+      error: (error) => {
+        this._snackBar.open('Error adding post', '❌');
+      }
+    });
   }
 
   addComment(postId: number) {
