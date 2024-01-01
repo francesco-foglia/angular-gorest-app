@@ -19,17 +19,17 @@ body {
 
 @media screen and (min-width: 1024px) {
   ::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+    width: 7px;
+    height: 7px;
   }
 
   ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 5px grey;
+    box-shadow: inset 0 0 7px grey;
   }
 
   ::-webkit-scrollbar-thumb {
     background: #c2185b;
-    border-radius: 5px;
+    border-radius: 7px;
   }
 }
 

@@ -23,11 +23,11 @@
 
 <div *ngIf="elements.length > 0" class="flex flex-wrap justify-start items-start">
   <div class="w-[180px] mr-8 mb-4">
-    <button (click)="firstPage()" mat-raised-button [disabled]="currentPage === 1">
+    <button (click)="firstPage()" mat-raised-button color="primary" [disabled]="currentPage === 1">
       <mat-icon>first_page</mat-icon>
     </button>
     <span class="mr-4"></span>
-    <button (click)="lastPage()" mat-raised-button [disabled]="currentPage === pages">
+    <button (click)="lastPage()" mat-raised-button color="primary" [disabled]="currentPage === pages">
       <mat-icon>last_page</mat-icon>
     </button>
   </div>
