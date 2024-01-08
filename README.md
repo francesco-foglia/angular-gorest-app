@@ -82,3 +82,21 @@ npm install
 ```
 ng serve
 ```
+
+## Screenshots
+
+### Login
+
+![Login](/src/assets/readme-img/login.png)
+
+### Main page – User list
+
+![User list](/src/assets/readme-img/user-list.png)
+
+### User detail page
+
+![User page](/src/assets/readme-img/user-page.png)
+
+### Post list
+
+![Post list](/src/assets/readme-img/post-list.png)
