@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { HttpResponse } from '@angular/common/http';
 import { ApiService } from '../../services/api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SearchComponent } from '../../components/search/search.component';
 
 @Component({
   selector: 'app-users',
@@ -10,6 +11,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
+
+  @ViewChild('searchComponentRef') searchComponentRef!: SearchComponent;
 
   spinner: boolean = false;
   users: any[] = [];
@@ -83,6 +86,9 @@ export class UsersComponent implements OnInit {
         this.searchName = '';
         this.searchEmail = '';
         this.userForm.reset();
+        if (this.searchComponentRef) {
+          this.searchComponentRef.onClear();
+        }
         this.currentPage = 1;
         this.getUsers();
       },

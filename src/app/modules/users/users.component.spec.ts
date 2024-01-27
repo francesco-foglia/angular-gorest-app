@@ -5,6 +5,7 @@ import { of, throwError } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UsersComponent } from './users.component';
 import { ApiService } from '../../services/api.service';
+import { ElementRef } from '@angular/core';
 
 describe('UsersComponent', () => {
   let component: UsersComponent;
@@ -164,6 +165,17 @@ describe('UsersComponent', () => {
     expect(window.confirm).toHaveBeenCalledWith('Are you sure you want to delete this user?');
     expect(snackBarSpy.open).toHaveBeenCalledWith('Error deleting user', '❌');
     expect(component.disabled).toBe(false);
+  });
+
+  it('should call onClear when adding a user successfully', () => {
+    const mockElementRef = new ElementRef(null);
+    component.searchComponentRef = { onClear: jasmine.createSpy('onClear') } as any;
+    spyOn(component, 'getUsers');
+    apiServiceSpy.post.and.returnValue(of({}));
+    component.addUser();
+    expect(component.searchComponentRef.onClear).toHaveBeenCalled();
+    expect(snackBarSpy.open).toHaveBeenCalledWith('User added successfully', '❌');
+    expect(component.getUsers).toHaveBeenCalled();
   });
 
 });

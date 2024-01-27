@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { HttpResponse } from '@angular/common/http';
 import { ApiService } from '../../services/api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SearchComponent } from '../../components/search/search.component';
 
 @Component({
   selector: 'app-posts',
@@ -10,6 +11,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./posts.component.css']
 })
 export class PostsComponent implements OnInit {
+
+  @ViewChild('searchComponentRef') searchComponentRef!: SearchComponent;
 
   posts: any[] = [];
   comments: any[] = [];
@@ -119,6 +122,9 @@ export class PostsComponent implements OnInit {
         this.searchTitle = '';
         this.searchText = '';
         this.postForm.reset();
+        if (this.searchComponentRef) {
+          this.searchComponentRef.onClear();
+        }
         this.currentPage = 1;
         this.getPosts();
       },
