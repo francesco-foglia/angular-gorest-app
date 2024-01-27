@@ -45,8 +45,10 @@
 
   <div class="flex flex-wrap justify-start items-start">
     <div class="w-full lg:w-1/2 max-w-[580px] py-4 pr-8">
-      <app-search label="Search for the user by name" (searchEvent)="searchUserName($event)"></app-search>
-      <app-search label="Search for the user by email" (searchEvent)="searchUserEmail($event)"></app-search>
+      <app-search #searchComponentRef label="Search for the user by name"
+        (searchEvent)="searchUserName($event)"></app-search>
+      <app-search #searchComponentRef label="Search for the user by email"
+        (searchEvent)="searchUserEmail($event)"></app-search>
     </div>
 
     <div class="w-full lg:w-1/2 max-w-[580px] py-4">
