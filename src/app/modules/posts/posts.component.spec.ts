@@ -5,6 +5,7 @@ import { of, throwError } from 'rxjs';
 import { PostsComponent } from './posts.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiService } from '../../services/api.service';
+import { ElementRef } from '@angular/core';
 
 describe('PostsComponent', () => {
   let component: PostsComponent;
@@ -183,6 +184,18 @@ describe('PostsComponent', () => {
     const post_id = 12345;
     component.addComment(post_id);
     expect(snackBarSpy.open).toHaveBeenCalledWith('Error adding comment', '❌');
+  });
+
+  it('should call onClear when adding a post successfully', () => {
+    const mockElementRef = new ElementRef(null);
+    component.searchComponentRef = { onClear: jasmine.createSpy('onClear') } as any;
+    spyOn(component, 'getPosts');
+    apiServiceSpy.post.and.returnValue(of({}));
+    const postId = 12345;
+    component.addPost(postId);
+    expect(component.searchComponentRef.onClear).toHaveBeenCalled();
+    expect(snackBarSpy.open).toHaveBeenCalledWith('Post added successfully', '❌');
+    expect(component.getPosts).toHaveBeenCalled();
   });
 
 });
