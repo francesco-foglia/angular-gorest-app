@@ -1,14 +1,16 @@
 <header class="w-full fixed top-0 left-0 z-[4] bg-[#202124]">
-  <nav class="py-3 px-[calc(5%-15px)]">
-    <ul class="flex flex-wrap justify-start items-center tracking-[1px]">
-      <li *ngFor="let route of routes" class="mr-3">
-        <a mat-button [routerLink]="[route.path]" routerLinkActive="active">{{ route.title }}</a>
-      </li>
-      <li>
-        <a mat-button (click)="logout()">Logout</a>
-      </li>
-    </ul>
-  </nav>
+  <div class="2xl:container mx-auto">
+    <nav class="py-3 px-[calc(5%-15px)]">
+      <ul class="flex flex-wrap justify-start items-center tracking-[1px]">
+        <li *ngFor="let route of routes" class="mr-3">
+          <a mat-button [routerLink]="[route.path]" routerLinkActive="active">{{ route.title }}</a>
+        </li>
+        <li>
+          <a mat-button (click)="logout()">Logout</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
 </header>
 
 <div *ngIf="spinner" class="fixed top-0 left-0 z-[3] w-full h-screen flex justify-center items-center">

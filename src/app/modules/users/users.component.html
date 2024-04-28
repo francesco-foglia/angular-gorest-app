@@ -1,91 +1,93 @@
 <app-navbar></app-navbar>
 
-<div class="w-full min-h-[calc(100vh-60px)] mt-[60px] pt-12 pb-6 px-[5%] relative">
+<div class="2xl:container mx-auto">
+  <div class="w-full min-h-[calc(100vh-60px)] mt-[60px] pt-12 pb-6 px-[5%] relative">
 
-  <h1>Users</h1>
+    <h1>Users</h1>
 
-  <div class="my-10 max-w-[1000px]">
-    <small>Add User</small>
-    <form [formGroup]="userForm" #formDirective="ngForm">
-      <mat-form-field class="w-full max-w-[250px]">
-        <mat-label>Name</mat-label>
-        <input matInput value="" type="text" formControlName="name">
-      </mat-form-field>
+    <div class="my-10 max-w-[1000px]">
+      <small>Add User</small>
+      <form [formGroup]="userForm" #formDirective="ngForm">
+        <mat-form-field class="w-full max-w-[250px]">
+          <mat-label>Name</mat-label>
+          <input matInput value="" type="text" formControlName="name">
+        </mat-form-field>
 
-      <mat-form-field class="w-full max-w-[250px]">
-        <mat-label>Email</mat-label>
-        <input matInput value="" type="email" formControlName="email">
-      </mat-form-field>
+        <mat-form-field class="w-full max-w-[250px]">
+          <mat-label>Email</mat-label>
+          <input matInput value="" type="email" formControlName="email">
+        </mat-form-field>
 
-      <mat-form-field>
-        <mat-label>Gender</mat-label>
-        <mat-select formControlName="gender">
-          <mat-option></mat-option>
-          <mat-option value="male">Male</mat-option>
-          <mat-option value="female">Female</mat-option>
-        </mat-select>
-      </mat-form-field>
+        <mat-form-field>
+          <mat-label>Gender</mat-label>
+          <mat-select formControlName="gender">
+            <mat-option></mat-option>
+            <mat-option value="male">Male</mat-option>
+            <mat-option value="female">Female</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-      <mat-form-field>
-        <mat-label>Status</mat-label>
-        <mat-select formControlName="status">
-          <mat-option></mat-option>
-          <mat-option value="active">Active</mat-option>
-          <mat-option value="inactive">Inactive</mat-option>
-        </mat-select>
-      </mat-form-field>
+        <mat-form-field>
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status">
+            <mat-option></mat-option>
+            <mat-option value="active">Active</mat-option>
+            <mat-option value="inactive">Inactive</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-      <span class="mr-4"></span>
-      <button type="submit" mat-raised-button color="primary" [disabled]="!userForm.valid"
-        (click)="addUser(); formDirective.resetForm();">
-        <mat-icon>add</mat-icon>
-      </button>
-    </form>
-  </div>
-
-  <div class="flex flex-wrap justify-start items-start">
-    <div class="w-full lg:w-1/2 max-w-[580px] py-4 pr-8">
-      <app-search #searchComponentRef label="Search for the user by name"
-        (searchEvent)="searchUserName($event)"></app-search>
-      <app-search #searchComponentRef label="Search for the user by email"
-        (searchEvent)="searchUserEmail($event)"></app-search>
+        <span class="mr-4"></span>
+        <button type="submit" mat-raised-button color="primary" [disabled]="!userForm.valid"
+          (click)="addUser(); formDirective.resetForm();">
+          <mat-icon>add</mat-icon>
+        </button>
+      </form>
     </div>
 
-    <div class="w-full lg:w-1/2 max-w-[580px] py-4">
-      <app-pagination [elements]="users" [spinner]="spinner" [currentPage]="currentPage" [pages]="pages"
-        [resultsPerPage]="resultsPerPage" [total]="total" (previousPageEvent)="previousPage($event)"
-        (nextPageEvent)="nextPage($event)" (firstPageEvent)="firstPage($event)" (lastPageEvent)="lastPage($event)"
-        (resultsPerPageEvent)="setResultsPerPage($event)">
-      </app-pagination>
-    </div>
-  </div>
+    <div class="flex flex-wrap justify-start items-start">
+      <div class="w-full lg:w-1/2 max-w-[580px] py-4 pr-8">
+        <app-search #searchComponentRef label="Search for the user by name"
+          (searchEvent)="searchUserName($event)"></app-search>
+        <app-search #searchComponentRef label="Search for the user by email"
+          (searchEvent)="searchUserEmail($event)"></app-search>
+      </div>
 
-  <div *ngIf="users.length > 0" class="mt-10">
-    <ul>
-      <li *ngFor="let user of users" class="mb-6 flex justify-start items-center">
-        <div class="flex">
-          <div class="m-auto mr-4 mb-[12px]">
-            <button mat-raised-button (click)="deleteUser(user.id)" [disabled]="disabled">
-              <mat-icon>delete</mat-icon>
-            </button>
+      <div class="w-full lg:w-1/2 max-w-[580px] py-4">
+        <app-pagination [elements]="users" [spinner]="spinner" [currentPage]="currentPage" [pages]="pages"
+          [resultsPerPage]="resultsPerPage" [total]="total" (previousPageEvent)="previousPage($event)"
+          (nextPageEvent)="nextPage($event)" (firstPageEvent)="firstPage($event)" (lastPageEvent)="lastPage($event)"
+          (resultsPerPageEvent)="setResultsPerPage($event)">
+        </app-pagination>
+      </div>
+    </div>
+
+    <div *ngIf="users.length > 0" class="mt-10">
+      <ul>
+        <li *ngFor="let user of users" class="mb-6 flex justify-start items-center">
+          <div class="flex">
+            <div class="m-auto mr-4 mb-[12px]">
+              <button mat-raised-button (click)="deleteUser(user.id)" [disabled]="disabled">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
           </div>
-        </div>
-        <div class="whitespace-break-spaces">
-          <a [routerLink]="['/users', user.id]" class="flex flex-wrap hover:underline underline-offset-2">
-            <p class="flex">
-              <span class="text-[#c2185b]">Name: </span>
-              <span class="break-all">{{ user.name }} &nbsp; &nbsp;</span>
-            </p>
-            <p class="flex">
-              <span class="text-[#c2185b]">Email: </span>
-              <span class="break-all">{{ user.email }}</span>
-            </p>
-          </a>
-        </div>
-      </li>
-    </ul>
+          <div class="whitespace-break-spaces">
+            <a [routerLink]="['/users', user.id]" class="flex flex-wrap hover:underline underline-offset-2">
+              <p class="flex">
+                <span class="text-[#c2185b]">Name: </span>
+                <span class="break-all">{{ user.name }} &nbsp; &nbsp;</span>
+              </p>
+              <p class="flex">
+                <span class="text-[#c2185b]">Email: </span>
+                <span class="break-all">{{ user.email }}</span>
+              </p>
+            </a>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <app-spinner [showSpinner]="spinner"></app-spinner>
+
   </div>
-
-  <app-spinner [showSpinner]="spinner"></app-spinner>
-
 </div>
